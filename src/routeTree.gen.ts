@@ -9,12 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as LabsRouteImport } from './routes/labs'
+import { Route as CtfRouteImport } from './routes/ctf'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CertificationsRouteImport } from './routes/certifications'
+import { Route as BugBountyRouteImport } from './routes/bug-bounty'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabsRoute = LabsRouteImport.update({
+  id: '/labs',
+  path: '/labs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CtfRoute = CtfRouteImport.update({
+  id: '/ctf',
+  path: '/ctf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificationsRoute = CertificationsRouteImport.update({
   id: '/certifications',
   path: '/certifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BugBountyRoute = BugBountyRouteImport.update({
+  id: '/bug-bounty',
+  path: '/bug-bounty',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +55,114 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
+  '/ctf': typeof CtfRoute
+  '/labs': typeof LabsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
+  '/ctf': typeof CtfRoute
+  '/labs': typeof LabsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
+  '/ctf': typeof CtfRoute
+  '/labs': typeof LabsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/certifications'
+  fullPaths:
+    | '/'
+    | '/bug-bounty'
+    | '/certifications'
+    | '/contact'
+    | '/ctf'
+    | '/labs'
+    | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/certifications'
-  id: '__root__' | '/' | '/certifications'
+  to:
+    | '/'
+    | '/bug-bounty'
+    | '/certifications'
+    | '/contact'
+    | '/ctf'
+    | '/labs'
+    | '/sitemap.xml'
+  id:
+    | '__root__'
+    | '/'
+    | '/bug-bounty'
+    | '/certifications'
+    | '/contact'
+    | '/ctf'
+    | '/labs'
+    | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BugBountyRoute: typeof BugBountyRoute
   CertificationsRoute: typeof CertificationsRoute
+  ContactRoute: typeof ContactRoute
+  CtfRoute: typeof CtfRoute
+  LabsRoute: typeof LabsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/labs': {
+      id: '/labs'
+      path: '/labs'
+      fullPath: '/labs'
+      preLoaderRoute: typeof LabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ctf': {
+      id: '/ctf'
+      path: '/ctf'
+      fullPath: '/ctf'
+      preLoaderRoute: typeof CtfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/certifications': {
       id: '/certifications'
       path: '/certifications'
       fullPath: '/certifications'
       preLoaderRoute: typeof CertificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bug-bounty': {
+      id: '/bug-bounty'
+      path: '/bug-bounty'
+      fullPath: '/bug-bounty'
+      preLoaderRoute: typeof BugBountyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +177,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BugBountyRoute: BugBountyRoute,
   CertificationsRoute: CertificationsRoute,
+  ContactRoute: ContactRoute,
+  CtfRoute: CtfRoute,
+  LabsRoute: LabsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
