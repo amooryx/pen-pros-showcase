@@ -180,7 +180,7 @@ function Index() {
               <h3 className="mt-3 text-3xl font-semibold tracking-tight">Technical Arsenal.</h3>
             </div>
           </Reveal>
-          <Stagger key={active} className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Stagger className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {skills.map((g) => (
               <StaggerItem key={g.group}>
                 <div className="border border-border/80 dark:border-border/30 bg-card/50 dark:bg-card/25 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/45 transition duration-300 shadow-sm">
