@@ -13,7 +13,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
+// @ts-expect-error - fontsource css side-effect import
 import "@fontsource-variable/inter";
+// @ts-expect-error - fontsource css side-effect import
 import "@fontsource/instrument-serif";
 
 function NotFoundComponent() {
