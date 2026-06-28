@@ -134,13 +134,19 @@ function Index() {
             </Link>
           </div>
           
-          <Stagger className="mt-10 grid md:grid-cols-3 gap-4">
+          <Stagger className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 title: "Google Developer Student Clubs (GDSC)",
                 category: "Community • 2024",
                 image: "/images/events/gdsc.jpeg",
                 desc: "Led workshops, guided student developers, and grew our local Google developer community."
+              },
+              {
+                title: "1st Place — AJA CTF Competition",
+                category: "Championship • 2025",
+                image: "/images/events/aja-ctf.jpeg",
+                desc: "Led our core team to achieve the absolute 1st place in the AJA Capture The Flag competition."
               },
               {
                 title: "Blackhat CTF Finalist",
