@@ -144,6 +144,9 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 
   body {
@@ -166,8 +169,8 @@
 
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, oklch(0.90 0.003 260 / 0.6) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(0.90 0.003 260 / 0.6) 1px, transparent 1px);
+    linear-gradient(to right, var(--border) 0.8px, transparent 0.8px),
+    linear-gradient(to bottom, var(--border) 0.8px, transparent 0.8px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse at center, black 50%, transparent 85%);
 }

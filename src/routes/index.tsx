@@ -25,14 +25,23 @@ function Index() {
   return (
     <div>
       <section className="relative overflow-hidden">
+        {/* Apple-style subtle grid background */}
+        <div className="absolute inset-0 bg-grid opacity-[0.12] dark:opacity-[0.22] pointer-events-none" />
+        
+        {/* Glowing backdrop blur circles for premium tech aesthetic */}
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-[5%] right-[5%] w-[400px] h-[400px] rounded-full bg-primary/3 dark:bg-primary/5 blur-3xl pointer-events-none" />
+
         <div className="container-prose relative pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3.5 py-1.5 text-xs font-medium text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Available for engagements
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 dark:bg-secondary/30 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Available for engagements
             </div>
           </Reveal>
           <Reveal delay={0.05}>
-            <h1 className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02]">Omar Khalid.</h1>
+            <h1 className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent">
+              Omar Khalid.
+            </h1>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-muted-foreground">
@@ -49,13 +58,13 @@ function Index() {
             <div className="mt-10 flex flex-wrap gap-3 justify-center">
               <Link
                 to="/writeups"
-                className="group inline-flex items-center gap-1.5 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90"
+                className="group inline-flex items-center gap-1.5 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90 shadow-sm"
               >
                 Read writeups <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-1.5 rounded-full border border-border px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 dark:bg-background/20 backdrop-blur-md px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition shadow-sm"
               >
                 Get in touch
               </Link>
@@ -64,12 +73,12 @@ function Index() {
         </div>
       </section>
 
-      <section className="border-y border-border">
+      <section className="border-y border-border relative bg-secondary/20 dark:bg-secondary/5">
         <div className="container-prose py-14">
           <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
               <StaggerItem key={s.label} className="text-center">
-                <div className="text-5xl md:text-6xl font-semibold tracking-tight">{s.value}</div>
+                <div className="text-5xl md:text-6xl font-serif italic text-primary font-medium tracking-tight">{s.value}</div>
                 <div className="mt-2 text-xs text-muted-foreground uppercase tracking-[0.15em]">{s.label}</div>
               </StaggerItem>
             ))}
@@ -77,7 +86,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-prose py-28 md:py-36">
+      <section className="container-prose py-28 md:py-36 relative">
         <div className="max-w-3xl">
           <Reveal>
             <div className="text-xs font-medium text-primary uppercase tracking-[0.18em]">About</div>
@@ -100,7 +109,7 @@ function Index() {
         <Stagger className="mt-16 grid md:grid-cols-3 gap-4">
           {skills.map((g) => (
             <StaggerItem key={g.group}>
-              <div className="terminal-frame rounded-2xl p-7 h-full">
+              <div className="border border-border/80 dark:border-border/30 bg-card/50 dark:bg-card/25 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/45 transition duration-300 shadow-sm">
                 <div className="flex items-center gap-2 text-sm font-medium">
                   {g.group === "Offensive" && <Bug className="h-4 w-4 text-primary" />}
                   {g.group === "Defensive / DFIR" && <ShieldCheck className="h-4 w-4 text-primary" />}
@@ -109,7 +118,7 @@ function Index() {
                 </div>
                 <ul className="mt-5 flex flex-wrap gap-1.5">
                   {g.items.map((i) => (
-                    <li key={i} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-foreground/80">{i}</li>
+                    <li key={i} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-foreground/80 border border-border/40">{i}</li>
                   ))}
                 </ul>
               </div>
@@ -118,7 +127,7 @@ function Index() {
         </Stagger>
       </section>
 
-      <section className="border-t border-border bg-secondary/40">
+      <section className="border-t border-border bg-secondary/40 dark:bg-secondary/10 relative">
         <div className="container-prose py-28">
           <div className="flex items-end justify-between flex-wrap gap-4">
             <Reveal>
@@ -137,7 +146,7 @@ function Index() {
                 <Link
                   to="/writeups/$slug"
                   params={{ slug: c.slug }}
-                  className="block terminal-frame rounded-2xl p-6 h-full group hover:border-primary/40 hover:-translate-y-0.5 transition"
+                  className="block border border-border/80 dark:border-border/30 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/5"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <ShieldCheck className="h-5 w-5 text-primary" />
@@ -152,7 +161,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-prose py-28">
+      <section className="container-prose py-28 relative">
         <div className="flex items-end justify-between flex-wrap gap-4">
           <Reveal>
             <div>
@@ -170,7 +179,7 @@ function Index() {
               <Link
                 to="/writeups/$slug"
                 params={{ slug: l.slug }}
-                className="block terminal-frame rounded-2xl p-7 h-full group hover:border-primary/40 hover:-translate-y-0.5 transition"
+                className="block border border-border/85 dark:border-border/35 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/5"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-primary uppercase tracking-wider">{l.category}</span>
@@ -184,23 +193,26 @@ function Index() {
         </Stagger>
       </section>
 
-      <section className="container-prose pb-28">
+      <section className="container-prose pb-28 relative">
         <Reveal>
-          <div className="rounded-3xl bg-foreground text-background p-12 md:p-20 text-center">
-            <div className="text-xs font-medium uppercase tracking-[0.18em] opacity-70">Engage</div>
-            <h2 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight">
-              Need someone who'll actually find it?
-            </h2>
-            <p className="mt-5 text-lg opacity-80 max-w-xl mx-auto">
-              Open to penetration testing engagements, red team exercises and DFIR collaborations.
-            </p>
-            <div className="mt-8">
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-1.5 rounded-full bg-background text-foreground px-6 py-3 text-sm font-medium hover:opacity-90 transition"
-              >
-                Start a conversation <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="rounded-3xl bg-foreground text-background p-12 md:p-20 text-center relative overflow-hidden shadow-xl border border-border/20">
+            <div className="absolute inset-0 bg-grid opacity-[0.05] pointer-events-none" />
+            <div className="relative z-10">
+              <div className="text-xs font-medium uppercase tracking-[0.18em] opacity-70">Engage</div>
+              <h2 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight">
+                Need someone who'll actually find it?
+              </h2>
+              <p className="mt-5 text-lg opacity-80 max-w-xl mx-auto">
+                Open to penetration testing engagements, red team exercises and DFIR collaborations.
+              </p>
+              <div className="mt-8">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-background text-foreground px-6 py-3 text-sm font-medium hover:opacity-90 transition shadow-sm"
+                >
+                  Start a conversation <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
         </Reveal>

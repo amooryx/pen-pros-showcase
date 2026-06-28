@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -13,6 +13,35 @@ const nav = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialDark = saved === "dark" || (saved === null && prefersDark);
+    
+    setIsDark(initialDark);
+    const root = window.document.documentElement;
+    if (initialDark) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    const root = window.document.documentElement;
+    if (nextDark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-xl">
       <div className="container-prose flex h-14 items-center justify-between">
@@ -23,27 +52,37 @@ export function SiteHeader() {
           <span className="text-sm font-medium tracking-tight">Omar Khalid</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {nav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className="text-[13px] px-3 py-2 rounded-full text-muted-foreground hover:text-foreground transition-colors"
-              activeProps={{ className: "text-[13px] px-3 py-2 rounded-full text-foreground bg-secondary" }}
-              activeOptions={{ exact: n.to === "/" }}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-1">
+            {nav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                className="text-[13px] px-3 py-2 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+                activeProps={{ className: "text-[13px] px-3 py-2 rounded-full text-foreground bg-secondary" }}
+                activeOptions={{ exact: n.to === "/" }}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="md:hidden p-2 text-foreground"
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
+          </button>
+
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="md:hidden p-2 text-foreground"
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (

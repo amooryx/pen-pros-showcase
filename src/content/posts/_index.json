@@ -3,109 +3,49 @@
     "slug": "ctf-disko-1-picoctf",
     "title": "DISKO 1 - picoCTF",
     "category": "CTF",
-    "description": ""
+    "description": "🔖 Title: Disk Image Forensics\\\n👤 Author: Darkraicg492\\\n📝 Description:"
   },
   {
     "slug": "ctf-event-viewing-picoctf-writeup",
     "title": "Event Viewing — PicoCTF Writeup",
     "category": "CTF",
-    "description": ""
+    "description": "This challenge gave us a Windows Event Log file (.evtx), a format introduced with Windows Vista to replace the older .evt logs. These files capture de..."
   },
   {
     "slug": "ctf-forensics-challenge-dear-diary-or-picoctf-writeup",
     "title": "Forensics Challenge — \"Dear-Diary\" | PicoCTF Writeup",
     "category": "CTF",
-    "description": ""
+    "description": "The challenge provides a disk image file to analyze for evidence of a hidden flag."
   },
   {
     "slug": "ctf-ph4nt0m-1ntrud3r-picoctf",
     "title": "Ph4nt0m 1ntrud3r – PicoCTF",
     "category": "CTF",
-    "description": ""
+    "description": "Author: Eric H\\\nMarch 28, 2025 · 2 min read"
   },
   {
     "slug": "ctf-picoctf-2025-flags-are-stepic-writeup",
     "title": "PicoCTF 2025 — \"flags are stepic\" Writeup",
     "category": "CTF",
-    "description": ""
+    "description": "In this challenge, we’re directed to a webpage that showcases dozens of country flags alongside their names. Most entries are ordinary and familiar — ..."
   },
   {
     "slug": "ctf-picoctf-writeup-disko2",
     "title": "PicoCTF Writeup — DISKO2",
     "category": "CTF",
-    "description": ""
+    "description": "In this challenge, we’re given a disk image file named disko-2.dd.gz. Our goal is to explore its contents and uncover the hidden flag. The hint is in ..."
   },
   {
     "slug": "ctf-red-stego-fun-with-pngs",
     "title": "RED – Stego Fun with PNGs",
     "category": "CTF",
-    "description": ""
+    "description": "Hey there, fellow cybersecurity explorers! 👋\\\nIn this post, we’ll tackle a fun forensic challenge from the picoCTF 2025 event titled “RED.”\\\nIf you're..."
   },
   {
     "slug": "ctf-secret-of-the-polyglot-picoctf-write-up",
     "title": "Secret of the Polyglot - PicoCTF Write-Up",
     "category": "CTF",
-    "description": ""
-  },
-  {
-    "slug": "mobile-lab-1-hooking-your-first-method-in-an-android-app",
-    "title": "Lab 1 — Hooking Your First Method in an Android App",
-    "category": "Mobile",
-    "description": ""
-  },
-  {
-    "slug": "mobile-lab-2-hooking-class-fields-and-modifying-app-logic",
-    "title": "Lab 2 – Hooking Class Fields & Modifying App Logic",
-    "category": "Mobile",
-    "description": ""
-  },
-  {
-    "slug": "mobile-lab-3-modifying-static-variables-in-singleton-classes",
-    "title": "Lab 3 – Modifying Static Variables in Singleton Classes",
-    "category": "Mobile",
-    "description": ""
-  },
-  {
-    "slug": "mobile-lab-4-calling-methods-of-a-non-static-class-using-frida",
-    "title": "Lab 4 — Calling Methods of a Non‑Static Class Using Frida",
-    "category": "Mobile",
-    "description": ""
-  },
-  {
-    "slug": "mobile-lab-config-editor-mobile-rce-full-write-up",
-    "title": "Lab – Config Editor (Mobile RCE) – Full Write‑Up",
-    "category": "Mobile",
-    "description": ""
-  },
-  {
-    "slug": "projects-fakegpt-malware-analysis-walkthrough",
-    "title": "FakeGPT — Malware Analysis Walkthrough",
-    "category": "Malware",
-    "description": ""
-  },
-  {
-    "slug": "projects-redline-lab-memory-analysis",
-    "title": "RedLine Lab - Memory Analysis",
-    "category": "Memory",
-    "description": ""
-  },
-  {
-    "slug": "projects-reveal-lab-incident-response-scenario",
-    "title": "Reveal Lab Incident Response Scenario",
-    "category": "DFIR",
-    "description": ""
-  },
-  {
-    "slug": "projects-reverse-engineering-lab-re101",
-    "title": "Reverse Engineering Lab – RE101",
-    "category": "Reverse Engineering",
-    "description": ""
-  },
-  {
-    "slug": "projects-xlmrat-lab-malware-analysis-and-network-forensics",
-    "title": "XLMRat Lab — Malware Analysis and Network Forensics",
-    "category": "Malware",
-    "description": ""
+    "description": "🧩 Challenge Overview"
   },
   {
     "slug": "certs-crtp",
@@ -160,5 +100,65 @@
     "title": "Security+",
     "category": "Certification",
     "description": "CompTIA Security+ SY0-701"
+  },
+  {
+    "slug": "projects-reveal-lab-incident-response-scenario",
+    "title": "Reveal Lab Incident Response Scenario",
+    "category": "DFIR",
+    "description": "Incident Response Scenario:"
+  },
+  {
+    "slug": "projects-fakegpt-malware-analysis-walkthrough",
+    "title": "FakeGPT — Malware Analysis Walkthrough",
+    "category": "Malware",
+    "description": "Category: Malware Analysis\\\nTactics: Credential Access, Collection, Command and Control, Exfiltration\\\nTools Used: JavaScript static analysis, browser..."
+  },
+  {
+    "slug": "projects-xlmrat-lab-malware-analysis-and-network-forensics",
+    "title": "XLMRat Lab — Malware Analysis and Network Forensics",
+    "category": "Malware",
+    "description": "Category: Network Forensics\\\nDifficulty: Easy\\\nEstimated Time: \\~30 minutes"
+  },
+  {
+    "slug": "projects-redline-lab-memory-analysis",
+    "title": "RedLine Lab - Memory Analysis",
+    "category": "Memory",
+    "description": "As part of the Blue Team, your mission is to analyze a memory dump from a potentially compromised machine. The attacker seems to have bypassed NIDS de..."
+  },
+  {
+    "slug": "mobile-lab-1-hooking-your-first-method-in-an-android-app",
+    "title": "Lab 1 — Hooking Your First Method in an Android App",
+    "category": "Mobile",
+    "description": "In this first lab, we’ll learn how to hook Android application methods using Frida.\\\nWe’ll use a simple CTF‑style number‑guessing app."
+  },
+  {
+    "slug": "mobile-lab-2-hooking-class-fields-and-modifying-app-logic",
+    "title": "Lab 2 – Hooking Class Fields & Modifying App Logic",
+    "category": "Mobile",
+    "description": "In this lab, we move beyond hooking simple methods and learn how to modify class fields at runtime using Frida.\\\nThis is extremely common in Android s..."
+  },
+  {
+    "slug": "mobile-lab-3-modifying-static-variables-in-singleton-classes",
+    "title": "Lab 3 – Modifying Static Variables in Singleton Classes",
+    "category": "Mobile",
+    "description": "In this lab, we analyze and exploit the logic of the FridaThree challenge application.\\\nThis challenge introduces a common Android pattern: a Singleto..."
+  },
+  {
+    "slug": "mobile-lab-4-calling-methods-of-a-non-static-class-using-frida",
+    "title": "Lab 4 — Calling Methods of a Non‑Static Class Using Frida",
+    "category": "Mobile",
+    "description": "In this chapter, we’ll learn a powerful and very common Frida technique:"
+  },
+  {
+    "slug": "mobile-lab-config-editor-mobile-rce-full-write-up",
+    "title": "Lab – Config Editor (Mobile RCE) – Full Write‑Up",
+    "category": "Mobile",
+    "description": "This challenge, Lab – Config Editor, focuses on exploiting a real-world vulnerability caused by insecure use of a popular third‑party library inside a..."
+  },
+  {
+    "slug": "projects-reverse-engineering-lab-re101",
+    "title": "Reverse Engineering Lab – RE101",
+    "category": "Reverse Engineering",
+    "description": "Title: Static Malware Analysis & Obfuscation Techniques\\\nAuthor: Omar\\\nLab Source: CyberDefenders RE101\\\nFocus: Real-world static RE challenges featur..."
   }
 ]
