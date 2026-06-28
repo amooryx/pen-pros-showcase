@@ -24,6 +24,7 @@ const PRIORITIES: Record<string, number> = {
   "bug-bounty-rate-limit-login-bruteforce": 90,
   "bug-bounty-session-expiration-logout-failure": 89,
   "certs-crtp": 88,
+  "tools-procsentinel": 87,
   "tools-jwt-attack-suite": 85,
   "tools-graphql-attack-mapper": 84,
   "tools-secret-scanner": 83,
