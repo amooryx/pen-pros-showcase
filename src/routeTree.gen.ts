@@ -13,7 +13,10 @@ import { Route as WriteupsRouteImport } from './routes/writeups'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as MediumRouteImport } from './routes/medium'
 import { Route as LabsRouteImport } from './routes/labs'
+import { Route as CtfRouteImport } from './routes/ctf'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CertificationsRouteImport } from './routes/certifications'
+import { Route as BugBountyRouteImport } from './routes/bug-bounty'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WriteupsSlugRouteImport } from './routes/writeups.$slug'
 
@@ -37,9 +40,24 @@ const LabsRoute = LabsRouteImport.update({
   path: '/labs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CtfRoute = CtfRouteImport.update({
+  id: '/ctf',
+  path: '/ctf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificationsRoute = CertificationsRouteImport.update({
   id: '/certifications',
   path: '/certifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BugBountyRoute = BugBountyRouteImport.update({
+  id: '/bug-bounty',
+  path: '/bug-bounty',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -55,7 +73,10 @@ const WriteupsSlugRoute = WriteupsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
+  '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -64,7 +85,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
+  '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -74,7 +98,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
+  '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -85,7 +112,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bug-bounty'
     | '/certifications'
+    | '/contact'
+    | '/ctf'
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
@@ -94,7 +124,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bug-bounty'
     | '/certifications'
+    | '/contact'
+    | '/ctf'
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
@@ -103,7 +136,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/bug-bounty'
     | '/certifications'
+    | '/contact'
+    | '/ctf'
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
@@ -113,7 +149,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BugBountyRoute: typeof BugBountyRoute
   CertificationsRoute: typeof CertificationsRoute
+  ContactRoute: typeof ContactRoute
+  CtfRoute: typeof CtfRoute
   LabsRoute: typeof LabsRoute
   MediumRoute: typeof MediumRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -150,11 +189,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LabsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ctf': {
+      id: '/ctf'
+      path: '/ctf'
+      fullPath: '/ctf'
+      preLoaderRoute: typeof CtfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/certifications': {
       id: '/certifications'
       path: '/certifications'
       fullPath: '/certifications'
       preLoaderRoute: typeof CertificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bug-bounty': {
+      id: '/bug-bounty'
+      path: '/bug-bounty'
+      fullPath: '/bug-bounty'
+      preLoaderRoute: typeof BugBountyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -188,7 +248,10 @@ const WriteupsRouteWithChildren = WriteupsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BugBountyRoute: BugBountyRoute,
   CertificationsRoute: CertificationsRoute,
+  ContactRoute: ContactRoute,
+  CtfRoute: CtfRoute,
   LabsRoute: LabsRoute,
   MediumRoute: MediumRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
