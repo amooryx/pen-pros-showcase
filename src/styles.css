@@ -62,46 +62,48 @@
 }
 
 :root {
-  --radius: 0.5rem;
-  /* Deep terminal palette */
-  --background: oklch(0.16 0.018 250);
-  --foreground: oklch(0.96 0.01 220);
-  --card: oklch(0.20 0.02 250);
-  --card-foreground: oklch(0.96 0.01 220);
-  --popover: oklch(0.20 0.02 250);
-  --popover-foreground: oklch(0.96 0.01 220);
-  /* Neon green accent — pentester signal */
-  --primary: oklch(0.86 0.20 145);
-  --primary-foreground: oklch(0.16 0.018 250);
-  --secondary: oklch(0.26 0.025 250);
-  --secondary-foreground: oklch(0.96 0.01 220);
-  --muted: oklch(0.24 0.022 250);
-  --muted-foreground: oklch(0.70 0.025 230);
-  --accent: oklch(0.78 0.16 220);
-  --accent-foreground: oklch(0.16 0.018 250);
-  --destructive: oklch(0.66 0.22 25);
+  --radius: 0.75rem;
+  /* Apple-style light palette */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.18 0.005 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.005 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.005 260);
+  /* Apple blue accent (#0071e3) */
+  --primary: oklch(0.58 0.20 255);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.965 0.003 260);
+  --secondary-foreground: oklch(0.18 0.005 260);
+  --muted: oklch(0.97 0.002 260);
+  --muted-foreground: oklch(0.50 0.01 260);
+  --accent: oklch(0.965 0.003 260);
+  --accent-foreground: oklch(0.18 0.005 260);
+  --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(0.98 0.005 240);
-  --border: oklch(0.30 0.025 250);
-  --input: oklch(0.30 0.025 250);
-  --ring: oklch(0.86 0.20 145);
+  --border: oklch(0.92 0.003 260);
+  --input: oklch(0.92 0.003 260);
+  --ring: oklch(0.58 0.20 255);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.18 0.02 250);
-  --sidebar-foreground: oklch(0.96 0.01 220);
-  --sidebar-primary: oklch(0.86 0.20 145);
-  --sidebar-primary-foreground: oklch(0.16 0.018 250);
-  --sidebar-accent: oklch(0.26 0.025 250);
-  --sidebar-accent-foreground: oklch(0.96 0.01 220);
-  --sidebar-border: oklch(0.30 0.025 250);
-  --sidebar-ring: oklch(0.86 0.20 145);
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.18 0.005 260);
+  --sidebar-primary: oklch(0.58 0.20 255);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.965 0.003 260);
+  --sidebar-accent-foreground: oklch(0.18 0.005 260);
+  --sidebar-border: oklch(0.92 0.003 260);
+  --sidebar-ring: oklch(0.58 0.20 255);
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --gradient-glow: radial-gradient(circle at 30% 20%, oklch(0.86 0.20 145 / 0.18), transparent 60%), radial-gradient(circle at 80% 60%, oklch(0.78 0.16 220 / 0.15), transparent 55%);
-  --shadow-glow: 0 0 40px -10px oklch(0.86 0.20 145 / 0.35);
+  --font-display: "Inter Variable", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Instrument Serif", "Times New Roman", Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --gradient-glow: radial-gradient(60% 50% at 50% 0%, oklch(0.58 0.20 255 / 0.10), transparent 70%);
+  --shadow-glow: 0 20px 60px -20px oklch(0.58 0.20 255 / 0.25);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -12px oklch(0 0 0 / 0.08);
 }
 
 .dark {
@@ -149,20 +151,25 @@
     color: var(--color-foreground);
     font-family: var(--font-display);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01", "ss03";
+    letter-spacing: -0.011em;
   }
+  h1, h2, h3, h4 { letter-spacing: -0.025em; }
 }
 
 @theme inline {
   --font-display: var(--font-display);
   --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
 }
 
-/* Subtle grid backdrop */
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, oklch(0.30 0.025 250 / 0.35) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(0.30 0.025 250 / 0.35) 1px, transparent 1px);
-  background-size: 44px 44px;
+    linear-gradient(to right, oklch(0.90 0.003 260 / 0.6) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.90 0.003 260 / 0.6) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 50%, transparent 85%);
 }
 
 @utility bg-glow {
@@ -171,22 +178,33 @@
 
 @utility text-mono {
   font-family: var(--font-mono);
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
+}
+
+@utility font-serif {
+  font-family: var(--font-serif);
 }
 
 @utility shadow-glow {
   box-shadow: var(--shadow-glow);
 }
 
-@utility terminal-frame {
-  border: 1px solid var(--color-border);
-  background: linear-gradient(180deg, oklch(0.22 0.02 250 / 0.7), oklch(0.18 0.02 250 / 0.7));
-  backdrop-filter: blur(8px);
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
 }
 
-/* Reusable section container */
+@utility terminal-frame {
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+}
+
+@utility surface {
+  background: var(--color-secondary);
+}
+
 @utility container-prose {
-  max-width: 72rem;
+  max-width: 76rem;
   margin-inline: auto;
   padding-inline: 1.5rem;
 }
@@ -198,3 +216,30 @@
 @utility caret {
   animation: blink 1s steps(1) infinite;
 }
+
+/* Minimal prose for markdown content */
+@utility prose-post {
+  color: var(--color-foreground);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.prose-post h1 { font-size: 2.25rem; font-weight: 600; margin: 2.25rem 0 1rem; letter-spacing: -0.03em; }
+.prose-post h2 { font-size: 1.625rem; font-weight: 600; margin: 2.25rem 0 .85rem; letter-spacing: -0.025em; }
+.prose-post h3 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 .65rem; }
+.prose-post h4 { font-size: 1.05rem; font-weight: 600; margin: 1.4rem 0 .5rem; }
+.prose-post p  { margin: 0 0 1.1rem; }
+.prose-post a  { color: var(--color-primary); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--color-primary) 35%, transparent); }
+.prose-post a:hover { border-bottom-color: var(--color-primary); }
+.prose-post ul, .prose-post ol { margin: 0 0 1.1rem 1.4rem; }
+.prose-post ul { list-style: disc; }
+.prose-post ol { list-style: decimal; }
+.prose-post li { margin: .35rem 0; }
+.prose-post blockquote { border-left: 3px solid var(--color-border); padding: .25rem 0 .25rem 1rem; color: var(--color-muted-foreground); margin: 1.25rem 0; font-style: italic; }
+.prose-post code { font-family: var(--font-mono); font-size: .88em; background: var(--color-secondary); padding: .15rem .4rem; border-radius: .35rem; }
+.prose-post pre { font-family: var(--font-mono); background: oklch(0.16 0.005 260); color: oklch(0.95 0.005 260); padding: 1.1rem 1.25rem; border-radius: .85rem; overflow-x: auto; font-size: .85rem; line-height: 1.65; margin: 1.25rem 0; }
+.prose-post pre code { background: transparent; padding: 0; color: inherit; }
+.prose-post img { border-radius: .75rem; margin: 1.5rem 0; max-width: 100%; height: auto; box-shadow: var(--shadow-card); }
+.prose-post hr { border: 0; border-top: 1px solid var(--color-border); margin: 2rem 0; }
+.prose-post table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: .95rem; }
+.prose-post th, .prose-post td { border-bottom: 1px solid var(--color-border); padding: .55rem .75rem; text-align: left; }
+.prose-post th { font-weight: 600; background: var(--color-secondary); }
