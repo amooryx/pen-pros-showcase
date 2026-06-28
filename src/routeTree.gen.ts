@@ -17,7 +17,6 @@ import { Route as CtfRouteImport } from './routes/ctf'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as BugBountyRouteImport } from './routes/bug-bounty'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as WriteupsSlugRouteImport } from './routes/writeups.$slug'
 
 const WriteupsRoute = WriteupsRouteImport.update({
@@ -60,11 +59,6 @@ const BugBountyRoute = BugBountyRouteImport.update({
   path: '/bug-bounty',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const WriteupsSlugRoute = WriteupsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -72,7 +66,6 @@ const WriteupsSlugRoute = WriteupsSlugRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
@@ -84,7 +77,6 @@ export interface FileRoutesByFullPath {
   '/writeups/$slug': typeof WriteupsSlugRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
@@ -97,7 +89,6 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/bug-bounty': typeof BugBountyRoute
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
@@ -111,7 +102,6 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/bug-bounty'
     | '/certifications'
     | '/contact'
@@ -123,7 +113,6 @@ export interface FileRouteTypes {
     | '/writeups/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/bug-bounty'
     | '/certifications'
     | '/contact'
@@ -135,7 +124,6 @@ export interface FileRouteTypes {
     | '/writeups/$slug'
   id:
     | '__root__'
-    | '/'
     | '/bug-bounty'
     | '/certifications'
     | '/contact'
@@ -148,7 +136,6 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   BugBountyRoute: typeof BugBountyRoute
   CertificationsRoute: typeof CertificationsRoute
   ContactRoute: typeof ContactRoute
@@ -217,13 +204,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BugBountyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/writeups/$slug': {
       id: '/writeups/$slug'
       path: '/$slug'
@@ -247,7 +227,6 @@ const WriteupsRouteWithChildren = WriteupsRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   BugBountyRoute: BugBountyRoute,
   CertificationsRoute: CertificationsRoute,
   ContactRoute: ContactRoute,
