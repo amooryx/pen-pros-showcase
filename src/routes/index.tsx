@@ -130,10 +130,10 @@ function Index() {
           <Stagger className="mt-10 grid md:grid-cols-3 gap-4">
             {[
               {
-                title: "1st Place — AJA CTF",
-                category: "Championship • 2025",
-                image: "/images/events/aja-ctf.jpeg",
-                desc: "Led our core team to secure 1st place in the AJA Capture The Flag tournament."
+                title: "Google Developer Student Clubs (GDSC)",
+                category: "Community • 2024",
+                image: "/images/events/gdsc.jpeg",
+                desc: "Led workshops, guided student developers, and grew our local Google developer community."
               },
               {
                 title: "Blackhat CTF Finalist",
