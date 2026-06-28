@@ -18,6 +18,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as BugBountyRouteImport } from './routes/bug-bounty'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WriteupsIndexRouteImport } from './routes/writeups.index'
 import { Route as WriteupsSlugRouteImport } from './routes/writeups.$slug'
 
 const WriteupsRoute = WriteupsRouteImport.update({
@@ -65,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WriteupsIndexRoute = WriteupsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WriteupsRoute,
+} as any)
 const WriteupsSlugRoute = WriteupsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/writeups': typeof WriteupsRouteWithChildren
   '/writeups/$slug': typeof WriteupsSlugRoute
+  '/writeups/': typeof WriteupsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,8 +99,8 @@ export interface FileRoutesByTo {
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/writeups': typeof WriteupsRouteWithChildren
   '/writeups/$slug': typeof WriteupsSlugRoute
+  '/writeups': typeof WriteupsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +114,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/writeups': typeof WriteupsRouteWithChildren
   '/writeups/$slug': typeof WriteupsSlugRoute
+  '/writeups/': typeof WriteupsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +129,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/writeups'
     | '/writeups/$slug'
+    | '/writeups/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -131,8 +140,8 @@ export interface FileRouteTypes {
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
-    | '/writeups'
     | '/writeups/$slug'
+    | '/writeups'
   id:
     | '__root__'
     | '/'
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/writeups'
     | '/writeups/$slug'
+    | '/writeups/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -224,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/writeups/': {
+      id: '/writeups/'
+      path: '/'
+      fullPath: '/writeups/'
+      preLoaderRoute: typeof WriteupsIndexRouteImport
+      parentRoute: typeof WriteupsRoute
+    }
     '/writeups/$slug': {
       id: '/writeups/$slug'
       path: '/$slug'
@@ -236,10 +253,12 @@ declare module '@tanstack/react-router' {
 
 interface WriteupsRouteChildren {
   WriteupsSlugRoute: typeof WriteupsSlugRoute
+  WriteupsIndexRoute: typeof WriteupsIndexRoute
 }
 
 const WriteupsRouteChildren: WriteupsRouteChildren = {
   WriteupsSlugRoute: WriteupsSlugRoute,
+  WriteupsIndexRoute: WriteupsIndexRoute,
 }
 
 const WriteupsRouteWithChildren = WriteupsRoute._addFileChildren(

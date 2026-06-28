@@ -62,6 +62,13 @@ function Index() {
               >
                 Read writeups <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </Link>
+              <a
+                href="/CV.pdf"
+                download="Omar_Khalid_CV.pdf"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 backdrop-blur-md px-6 py-3 text-sm font-medium text-primary transition shadow-sm cursor-pointer"
+              >
+                Download CV
+              </a>
               <Link
                 to="/contact"
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 dark:bg-background/20 backdrop-blur-md px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition shadow-sm"
@@ -78,7 +85,7 @@ function Index() {
           <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
               <StaggerItem key={s.label} className="text-center">
-                <div className="text-5xl md:text-6xl font-serif italic text-primary font-medium tracking-tight">{s.value}</div>
+                <div className="text-5xl md:text-6xl font-semibold tracking-tight">{s.value}</div>
                 <div className="mt-2 text-xs text-muted-foreground uppercase tracking-[0.15em]">{s.label}</div>
               </StaggerItem>
             ))}
