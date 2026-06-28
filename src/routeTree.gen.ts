@@ -13,6 +13,7 @@ import { Route as WriteupsRouteImport } from './routes/writeups'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as MediumRouteImport } from './routes/medium'
 import { Route as LabsRouteImport } from './routes/labs'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as CtfRouteImport } from './routes/ctf'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CertificationsRouteImport } from './routes/certifications'
@@ -38,6 +39,11 @@ const MediumRoute = MediumRouteImport.update({
 const LabsRoute = LabsRouteImport.update({
   id: '/labs',
   path: '/labs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CtfRoute = CtfRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
   '/ctf': typeof CtfRoute
+  '/events': typeof EventsRoute
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
   '/ctf': typeof CtfRoute
+  '/events': typeof EventsRoute
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
   '/ctf': typeof CtfRoute
+  '/events': typeof EventsRoute
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/certifications'
     | '/contact'
     | '/ctf'
+    | '/events'
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/certifications'
     | '/contact'
     | '/ctf'
+    | '/events'
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/certifications'
     | '/contact'
     | '/ctf'
+    | '/events'
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   CertificationsRoute: typeof CertificationsRoute
   ContactRoute: typeof ContactRoute
   CtfRoute: typeof CtfRoute
+  EventsRoute: typeof EventsRoute
   LabsRoute: typeof LabsRoute
   MediumRoute: typeof MediumRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/labs'
       fullPath: '/labs'
       preLoaderRoute: typeof LabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ctf': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   CertificationsRoute: CertificationsRoute,
   ContactRoute: ContactRoute,
   CtfRoute: CtfRoute,
+  EventsRoute: EventsRoute,
   LabsRoute: LabsRoute,
   MediumRoute: MediumRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

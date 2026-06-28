@@ -16,6 +16,7 @@ export function SiteFooter() {
             <li><Link to="/writeups" className="hover:text-primary">Writeups</Link></li>
             <li><Link to="/certifications" className="hover:text-primary">Certifications</Link></li>
             <li><Link to="/ctf" className="hover:text-primary">CTF</Link></li>
+            <li><Link to="/events" className="hover:text-primary">Events</Link></li>
             <li><Link to="/medium" className="hover:text-primary">Medium</Link></li>
           </ul>
         </div>

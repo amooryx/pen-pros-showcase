@@ -201,7 +201,66 @@ function Index() {
         </Stagger>
       </section>
 
-      <section className="container-prose pb-28 relative">
+      <section className="border-t border-border bg-secondary/40 dark:bg-secondary/10 relative">
+        <div className="container-prose py-28">
+          <div className="flex items-end justify-between flex-wrap gap-4">
+            <Reveal>
+              <div>
+                <div className="text-xs font-medium text-primary uppercase tracking-[0.18em]">Community &amp; Teams</div>
+                <h2 className="mt-3 text-4xl md:text-5xl font-semibold tracking-tight">Events &amp; Highlights.</h2>
+              </div>
+            </Reveal>
+            <Link to="/events" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              All events &amp; details <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <Stagger className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                title: "1st Place — AJA CTF Competition",
+                category: "Championship • 2025",
+                image: "/images/events/aja-ctf.jpeg",
+                desc: "Led our core team to secure 1st place in the AJA Capture The Flag tournament."
+              },
+              {
+                title: "Blackhat CTF Qualifiers Finalist",
+                category: "CTF Tournament • 2024 - 2025",
+                image: "/images/events/blackhat-2025.jpeg",
+                desc: "Qualified for the final round at Blackhat CTF, competing with an elite international group."
+              },
+              {
+                title: "LEAP 2025 Tech Summit Showcase",
+                category: "Summit • March 2025",
+                image: "/images/events/leap-2025.jpeg",
+                desc: "Participated in the world's most attended tech event in Riyadh, networking with global innovators."
+              }
+            ].map((e) => (
+              <StaggerItem key={e.title}>
+                <Link
+                  to="/events"
+                  className="block border border-border/80 dark:border-border/30 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-3xl overflow-hidden group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm"
+                >
+                  <div className="h-48 overflow-hidden bg-secondary/10 relative">
+                    <img
+                      src={e.image}
+                      alt={e.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="text-xs font-semibold text-primary uppercase tracking-wider">{e.category}</div>
+                    <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight group-hover:text-primary transition">{e.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{e.desc}</p>
+                  </div>
+                </Link>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      <section className="container-prose py-28 relative">
         <Reveal>
           <div className="rounded-3xl bg-foreground text-background p-12 md:p-20 text-center relative overflow-hidden shadow-xl border border-border/20">
             <div className="absolute inset-0 bg-grid opacity-[0.05] pointer-events-none" />
