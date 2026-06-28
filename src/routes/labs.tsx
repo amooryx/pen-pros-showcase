@@ -47,7 +47,7 @@ function LabsPage() {
             </button>
           ))}
         </div>
-        <Stagger className="grid md:grid-cols-2 gap-4">
+        <Stagger key={active} className="grid md:grid-cols-2 gap-4">
           {filtered.map((l) => (
             <StaggerItem key={l.slug}>
               <Link
