@@ -134,7 +134,7 @@ function Index() {
             </Link>
           </div>
           
-          <Stagger className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Stagger className="mt-10 grid sm:grid-cols-2 gap-6">
             {[
               {
                 title: "Google Developer Student Clubs (GDSC)",
