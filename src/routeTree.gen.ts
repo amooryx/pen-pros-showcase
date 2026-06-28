@@ -18,8 +18,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as BugBountyRouteImport } from './routes/bug-bounty'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WriteupsIndexRouteImport } from './routes/writeups.index'
-import { Route as WriteupsSlugRouteImport } from './routes/writeups.$slug'
+import { Route as WriteupsSlugRouteImport } from './routes/writeups_.$slug'
 
 const WriteupsRoute = WriteupsRouteImport.update({
   id: '/writeups',
@@ -66,15 +65,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WriteupsIndexRoute = WriteupsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => WriteupsRoute,
-} as any)
 const WriteupsSlugRoute = WriteupsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => WriteupsRoute,
+  id: '/writeups_/$slug',
+  path: '/writeups/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -86,9 +80,8 @@ export interface FileRoutesByFullPath {
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/writeups': typeof WriteupsRouteWithChildren
+  '/writeups': typeof WriteupsRoute
   '/writeups/$slug': typeof WriteupsSlugRoute
-  '/writeups/': typeof WriteupsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,8 +92,8 @@ export interface FileRoutesByTo {
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/writeups': typeof WriteupsRoute
   '/writeups/$slug': typeof WriteupsSlugRoute
-  '/writeups': typeof WriteupsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -112,9 +105,8 @@ export interface FileRoutesById {
   '/labs': typeof LabsRoute
   '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/writeups': typeof WriteupsRouteWithChildren
-  '/writeups/$slug': typeof WriteupsSlugRoute
-  '/writeups/': typeof WriteupsIndexRoute
+  '/writeups': typeof WriteupsRoute
+  '/writeups_/$slug': typeof WriteupsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,7 +121,6 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/writeups'
     | '/writeups/$slug'
-    | '/writeups/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,8 +131,8 @@ export interface FileRouteTypes {
     | '/labs'
     | '/medium'
     | '/sitemap.xml'
-    | '/writeups/$slug'
     | '/writeups'
+    | '/writeups/$slug'
   id:
     | '__root__'
     | '/'
@@ -153,8 +144,7 @@ export interface FileRouteTypes {
     | '/medium'
     | '/sitemap.xml'
     | '/writeups'
-    | '/writeups/$slug'
-    | '/writeups/'
+    | '/writeups_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -166,7 +156,8 @@ export interface RootRouteChildren {
   LabsRoute: typeof LabsRoute
   MediumRoute: typeof MediumRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  WriteupsRoute: typeof WriteupsRouteWithChildren
+  WriteupsRoute: typeof WriteupsRoute
+  WriteupsSlugRoute: typeof WriteupsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -234,36 +225,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/writeups/': {
-      id: '/writeups/'
-      path: '/'
-      fullPath: '/writeups/'
-      preLoaderRoute: typeof WriteupsIndexRouteImport
-      parentRoute: typeof WriteupsRoute
-    }
-    '/writeups/$slug': {
-      id: '/writeups/$slug'
-      path: '/$slug'
+    '/writeups_/$slug': {
+      id: '/writeups_/$slug'
+      path: '/writeups/$slug'
       fullPath: '/writeups/$slug'
       preLoaderRoute: typeof WriteupsSlugRouteImport
-      parentRoute: typeof WriteupsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface WriteupsRouteChildren {
-  WriteupsSlugRoute: typeof WriteupsSlugRoute
-  WriteupsIndexRoute: typeof WriteupsIndexRoute
-}
-
-const WriteupsRouteChildren: WriteupsRouteChildren = {
-  WriteupsSlugRoute: WriteupsSlugRoute,
-  WriteupsIndexRoute: WriteupsIndexRoute,
-}
-
-const WriteupsRouteWithChildren = WriteupsRoute._addFileChildren(
-  WriteupsRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -274,7 +244,8 @@ const rootRouteChildren: RootRouteChildren = {
   LabsRoute: LabsRoute,
   MediumRoute: MediumRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  WriteupsRoute: WriteupsRouteWithChildren,
+  WriteupsRoute: WriteupsRoute,
+  WriteupsSlugRoute: WriteupsSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

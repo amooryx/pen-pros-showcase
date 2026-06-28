@@ -32,7 +32,7 @@ function CtfPage() {
               <Link
                 to="/writeups/$slug"
                 params={{ slug: c.slug }}
-                className="block terminal-frame rounded-2xl p-6 h-full group hover:border-primary/40 hover:-translate-y-0.5 transition"
+                className="block border border-border/85 dark:border-border/35 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/5"
               >
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary uppercase tracking-wider">

@@ -4,7 +4,7 @@ import { Reveal } from "@/components/reveal";
 import { Markdown } from "@/components/markdown";
 import { postsBySlug } from "@/data/posts";
 
-export const Route = createFileRoute("/writeups/$slug")({
+export const Route = createFileRoute("/writeups_/$slug")({
   loader: ({ params }) => {
     const post = postsBySlug[params.slug];
     if (!post) throw notFound();
@@ -60,7 +60,7 @@ function WriteupPage() {
           <div className="mt-16 pt-8 border-t border-border flex items-center justify-between text-sm text-muted-foreground">
             <Link to="/writeups" className="hover:text-foreground">← More writeups</Link>
             <a href={post.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-foreground">
-              Original on GitBook <ExternalLink className="h-3.5 w-3.5" />
+               Original on GitBook <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
         </div>
