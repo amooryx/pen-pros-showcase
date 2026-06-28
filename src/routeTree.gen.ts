@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WriteupsRouteImport } from './routes/writeups'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LabsRouteImport } from './routes/labs'
 import { Route as CtfRouteImport } from './routes/ctf'
@@ -17,6 +18,11 @@ import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as BugBountyRouteImport } from './routes/bug-bounty'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WriteupsRoute = WriteupsRouteImport.update({
+  id: '/writeups',
+  path: '/writeups',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/writeups': typeof WriteupsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/writeups': typeof WriteupsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/writeups': typeof WriteupsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/ctf'
     | '/labs'
     | '/sitemap.xml'
+    | '/writeups'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/ctf'
     | '/labs'
     | '/sitemap.xml'
+    | '/writeups'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/ctf'
     | '/labs'
     | '/sitemap.xml'
+    | '/writeups'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +131,18 @@ export interface RootRouteChildren {
   CtfRoute: typeof CtfRoute
   LabsRoute: typeof LabsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  WriteupsRoute: typeof WriteupsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/writeups': {
+      id: '/writeups'
+      path: '/writeups'
+      fullPath: '/writeups'
+      preLoaderRoute: typeof WriteupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   CtfRoute: CtfRoute,
   LabsRoute: LabsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  WriteupsRoute: WriteupsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
