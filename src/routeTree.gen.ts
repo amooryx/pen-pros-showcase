@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WriteupsRouteImport } from './routes/writeups'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as MediumRouteImport } from './routes/medium'
 import { Route as LabsRouteImport } from './routes/labs'
 import { Route as CtfRouteImport } from './routes/ctf'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -27,6 +28,11 @@ const WriteupsRoute = WriteupsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediumRoute = MediumRouteImport.update({
+  id: '/medium',
+  path: '/medium',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LabsRoute = LabsRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
+  '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/writeups': typeof WriteupsRouteWithChildren
   '/writeups/$slug': typeof WriteupsSlugRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
+  '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/writeups': typeof WriteupsRouteWithChildren
   '/writeups/$slug': typeof WriteupsSlugRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/ctf': typeof CtfRoute
   '/labs': typeof LabsRoute
+  '/medium': typeof MediumRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/writeups': typeof WriteupsRouteWithChildren
   '/writeups/$slug': typeof WriteupsSlugRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/ctf'
     | '/labs'
+    | '/medium'
     | '/sitemap.xml'
     | '/writeups'
     | '/writeups/$slug'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/ctf'
     | '/labs'
+    | '/medium'
     | '/sitemap.xml'
     | '/writeups'
     | '/writeups/$slug'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/ctf'
     | '/labs'
+    | '/medium'
     | '/sitemap.xml'
     | '/writeups'
     | '/writeups/$slug'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CtfRoute: typeof CtfRoute
   LabsRoute: typeof LabsRoute
+  MediumRoute: typeof MediumRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WriteupsRoute: typeof WriteupsRouteWithChildren
 }
@@ -160,6 +173,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medium': {
+      id: '/medium'
+      path: '/medium'
+      fullPath: '/medium'
+      preLoaderRoute: typeof MediumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/labs': {
@@ -233,6 +253,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CtfRoute: CtfRoute,
   LabsRoute: LabsRoute,
+  MediumRoute: MediumRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WriteupsRoute: WriteupsRouteWithChildren,
 }
