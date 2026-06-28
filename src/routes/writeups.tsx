@@ -20,32 +20,35 @@ export const Route = createFileRoute("/writeups")({
 function WriteupsPage() {
   const [active, setActive] = useState<string>("All");
 
+  const displayPosts = posts.filter((p) => p.category !== "Certification");
+  const categories = Array.from(new Set(displayPosts.map((p) => p.category))).sort();
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const cat = params.get("category");
       if (cat) {
-        // Find match in ALL_CATEGORIES ignoring case or exact match
-        const found = ["All", ...ALL_CATEGORIES].find(c => c.toLowerCase() === cat.toLowerCase());
+        // Find match in categories ignoring case or exact match
+        const found = ["All", ...categories].find(c => c.toLowerCase() === cat.toLowerCase());
         if (found) {
           setActive(found);
         }
       }
     }
-  }, []);
+  }, [categories]);
 
-  const filtered = active === "All" ? posts : posts.filter((p) => p.category === active);
+  const filtered = active === "All" ? displayPosts : displayPosts.filter((p) => p.category === active);
 
   return (
     <div>
       <PageHeader
         kicker="Archive"
         title="Writeups."
-        description="Every lab, CTF, malware reverse, DFIR scenario and certification review — fully written here, no need to leave the site."
+        description="Every lab, CTF, malware reverse, DFIR scenario and vulnerability report — fully written here, no need to leave the site."
       />
       <section className="container-prose pb-24">
         <div className="flex flex-wrap gap-2 mb-10 border-b border-border pb-6">
-          {["All", ...ALL_CATEGORIES].map((c) => (
+          {["All", ...categories].map((c) => (
             <button
               key={c}
               onClick={() => setActive(c)}
