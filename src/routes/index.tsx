@@ -113,26 +113,94 @@ function Index() {
           </Reveal>
         </div>
 
-        <Stagger className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {skills.map((g) => (
-            <StaggerItem key={g.group}>
-              <div className="border border-border/80 dark:border-border/30 bg-card/50 dark:bg-card/25 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/45 transition duration-300 shadow-sm">
-                <div className="flex items-center gap-2 text-sm font-medium">
-                  {g.group.includes("Testing") && <Bug className="h-4 w-4 text-primary" />}
-                  {g.group.includes("Red Teaming") && <Crosshair className="h-4 w-4 text-primary" />}
-                  {g.group.includes("Defensive") && <ShieldCheck className="h-4 w-4 text-primary" />}
-                  {g.group.includes("Tooling") && <ScanLine className="h-4 w-4 text-primary" />}
-                  {g.group}
-                </div>
-                <ul className="mt-5 flex flex-wrap gap-1.5">
-                  {g.items.map((i) => (
-                    <li key={i} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-foreground/80 border border-border/40">{i}</li>
-                  ))}
-                </ul>
+        {/* Events & Highlights Grid */}
+        <div className="mt-20">
+          <div className="flex items-end justify-between flex-wrap gap-4 border-b border-border pb-6">
+            <Reveal>
+              <div>
+                <div className="text-xs font-medium text-primary uppercase tracking-[0.18em]">Community &amp; Teams</div>
+                <h3 className="mt-3 text-3xl font-semibold tracking-tight">Events &amp; Highlights.</h3>
               </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
+            </Reveal>
+            <Link to="/events" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+              All events &amp; details <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          
+          <Stagger className="mt-10 grid md:grid-cols-3 gap-4">
+            {[
+              {
+                title: "1st Place — AJA CTF",
+                category: "Championship • 2025",
+                image: "/images/events/aja-ctf.jpeg",
+                desc: "Led our core team to secure 1st place in the AJA Capture The Flag tournament."
+              },
+              {
+                title: "Blackhat CTF Finalist",
+                category: "Tournament • 2024 - 2025",
+                image: "/images/events/blackhat-2025.jpeg",
+                desc: "Qualified for the final round at Blackhat CTF, competing with an elite team."
+              },
+              {
+                title: "LEAP 2025 Showcase",
+                category: "Summit • March 2025",
+                image: "/images/events/leap-2025-2.jpeg",
+                desc: "Participated in the massive LEAP 2025 tech summit in Riyadh with teammates."
+              }
+            ].map((e) => (
+              <StaggerItem key={e.title}>
+                <Link
+                  to="/events"
+                  className="block border border-border/80 dark:border-border/30 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-3xl overflow-hidden group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm"
+                >
+                  <div className="h-44 overflow-hidden bg-secondary/10 relative">
+                    <img
+                      src={e.image}
+                      alt={e.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="text-xs font-semibold text-primary uppercase tracking-wider">{e.category}</div>
+                    <h4 className="mt-3 text-base font-semibold leading-snug tracking-tight group-hover:text-primary transition">{e.title}</h4>
+                    <p className="mt-2 text-xs text-muted-foreground line-clamp-2">{e.desc}</p>
+                  </div>
+                </Link>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+
+        {/* Skills sub-header and grid */}
+        <div className="mt-24">
+          <Reveal>
+            <div>
+              <div className="text-xs font-medium text-primary uppercase tracking-[0.18em]">Skills</div>
+              <h3 className="mt-3 text-3xl font-semibold tracking-tight">Technical Arsenal.</h3>
+            </div>
+          </Reveal>
+          <Stagger key={active} className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {skills.map((g) => (
+              <StaggerItem key={g.group}>
+                <div className="border border-border/80 dark:border-border/30 bg-card/50 dark:bg-card/25 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/45 transition duration-300 shadow-sm">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    {g.group.includes("Testing") && <Bug className="h-4 w-4 text-primary" />}
+                    {g.group.includes("Red Teaming") && <Crosshair className="h-4 w-4 text-primary" />}
+                    {g.group.includes("Defensive") && <ShieldCheck className="h-4 w-4 text-primary" />}
+                    {g.group.includes("Tooling") && <ScanLine className="h-4 w-4 text-primary" />}
+                    {g.group}
+                  </div>
+                  <ul className="mt-5 flex flex-wrap gap-1.5">
+                    {g.items.map((i) => (
+                      <li key={i} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-foreground/80 border border-border/40">{i}</li>
+                    ))}
+                  </ul>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
       </section>
 
       <section className="border-t border-border bg-secondary/40 dark:bg-secondary/10 relative">
@@ -199,65 +267,6 @@ function Index() {
             </StaggerItem>
           ))}
         </Stagger>
-      </section>
-
-      <section className="border-t border-border bg-secondary/40 dark:bg-secondary/10 relative">
-        <div className="container-prose py-28">
-          <div className="flex items-end justify-between flex-wrap gap-4">
-            <Reveal>
-              <div>
-                <div className="text-xs font-medium text-primary uppercase tracking-[0.18em]">Community &amp; Teams</div>
-                <h2 className="mt-3 text-4xl md:text-5xl font-semibold tracking-tight">Events &amp; Highlights.</h2>
-              </div>
-            </Reveal>
-            <Link to="/events" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
-              All events &amp; details <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <Stagger className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              {
-                title: "1st Place — AJA CTF Competition",
-                category: "Championship • 2025",
-                image: "/images/events/aja-ctf.jpeg",
-                desc: "Led our core team to secure 1st place in the AJA Capture The Flag tournament."
-              },
-              {
-                title: "Blackhat CTF Qualifiers Finalist",
-                category: "CTF Tournament • 2024 - 2025",
-                image: "/images/events/blackhat-2025.jpeg",
-                desc: "Qualified for the final round at Blackhat CTF, competing with an elite international group."
-              },
-              {
-                title: "LEAP 2025 Tech Summit Showcase",
-                category: "Summit • March 2025",
-                image: "/images/events/leap-2025-2.jpeg",
-                desc: "Participated in the world's most attended tech event in Riyadh, networking with global innovators."
-              }
-            ].map((e) => (
-              <StaggerItem key={e.title}>
-                <Link
-                  to="/events"
-                  className="block border border-border/80 dark:border-border/30 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-3xl overflow-hidden group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm"
-                >
-                  <div className="h-48 overflow-hidden bg-secondary/10 relative">
-                    <img
-                      src={e.image}
-                      alt={e.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="text-xs font-semibold text-primary uppercase tracking-wider">{e.category}</div>
-                    <h3 className="mt-3 text-lg font-semibold leading-snug tracking-tight group-hover:text-primary transition">{e.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{e.desc}</p>
-                  </div>
-                </Link>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
       </section>
 
       <section className="container-prose py-28 relative">
