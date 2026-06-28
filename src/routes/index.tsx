@@ -140,25 +140,29 @@ function Index() {
                 title: "Google Developer Student Clubs (GDSC)",
                 category: "Community • 2024",
                 image: "/images/events/gdsc.jpeg",
-                desc: "Led workshops, guided student developers, and grew our local Google developer community."
+                desc: "Led workshops, guided student developers, and grew our local Google developer community.",
+                position: "object-cover object-[center_10%]"
               },
               {
                 title: "1st Place — AJA CTF Competition",
                 category: "Championship • 2025",
                 image: "/images/events/aja-ctf.jpeg",
-                desc: "Led our core team to achieve the absolute 1st place in the AJA Capture The Flag competition."
+                desc: "Led our core team to achieve the absolute 1st place in the AJA Capture The Flag competition.",
+                position: "object-cover object-[center_60%]"
               },
               {
                 title: "Blackhat CTF Finalist",
                 category: "Tournament • 2024 - 2025",
                 image: "/images/events/blackhat-2025.jpeg",
-                desc: "Qualified for the final round at Blackhat CTF, competing with an elite team."
+                desc: "Qualified for the final round at Blackhat CTF, competing with an elite team.",
+                position: "object-cover object-[center_25%]"
               },
               {
                 title: "LEAP 2025 Showcase",
                 category: "Summit • March 2025",
                 image: "/images/events/leap-2025-2.jpeg",
-                desc: "Participated in the massive LEAP 2025 tech summit in Riyadh with teammates."
+                desc: "Participated in the massive LEAP 2025 tech summit in Riyadh with teammates.",
+                position: "object-cover object-[center_35%]"
               }
             ].map((e) => (
               <StaggerItem key={e.title}>
@@ -166,11 +170,11 @@ function Index() {
                   to="/events"
                   className="block border border-border/80 dark:border-border/30 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-3xl overflow-hidden group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm"
                 >
-                  <div className="h-44 overflow-hidden bg-secondary/10 relative">
+                  <div className="h-72 overflow-hidden bg-secondary/10 relative">
                     <img
                       src={e.image}
                       alt={e.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className={`w-full h-full ${e.position} transition-transform duration-500 group-hover:scale-105`}
                       loading="lazy"
                     />
                   </div>
