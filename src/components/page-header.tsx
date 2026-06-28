@@ -2,18 +2,17 @@ import { Reveal } from "./reveal";
 
 export function PageHeader({ kicker, title, description }: { kicker: string; title: string; description?: string }) {
   return (
-    <section className="relative border-b border-border/60">
-      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden />
-      <div className="container-prose relative py-20 md:py-28">
+    <section className="relative">
+      <div className="container-prose relative pt-20 md:pt-28 pb-10">
         <Reveal>
-          <div className="text-mono text-xs text-primary">// {kicker}</div>
+          <div className="text-xs font-medium text-primary uppercase tracking-[0.18em]">{kicker}</div>
         </Reveal>
         <Reveal delay={0.05}>
-          <h1 className="mt-4 text-4xl md:text-6xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="mt-4 text-5xl md:text-7xl font-semibold tracking-tight leading-[1.02]">{title}</h1>
         </Reveal>
         {description && (
           <Reveal delay={0.1}>
-            <p className="mt-5 max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed">{description}</p>
+            <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed">{description}</p>
           </Reveal>
         )}
       </div>

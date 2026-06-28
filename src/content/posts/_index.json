@@ -1,0 +1,164 @@
+[
+  {
+    "slug": "ctf-disko-1-picoctf",
+    "title": "DISKO 1 - picoCTF",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-event-viewing-picoctf-writeup",
+    "title": "Event Viewing — PicoCTF Writeup",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-forensics-challenge-dear-diary-or-picoctf-writeup",
+    "title": "Forensics Challenge — \"Dear-Diary\" | PicoCTF Writeup",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-ph4nt0m-1ntrud3r-picoctf",
+    "title": "Ph4nt0m 1ntrud3r – PicoCTF",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-picoctf-2025-flags-are-stepic-writeup",
+    "title": "PicoCTF 2025 — \"flags are stepic\" Writeup",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-picoctf-writeup-disko2",
+    "title": "PicoCTF Writeup — DISKO2",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-red-stego-fun-with-pngs",
+    "title": "RED – Stego Fun with PNGs",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "ctf-secret-of-the-polyglot-picoctf-write-up",
+    "title": "Secret of the Polyglot - PicoCTF Write-Up",
+    "category": "CTF",
+    "description": ""
+  },
+  {
+    "slug": "mobile-lab-1-hooking-your-first-method-in-an-android-app",
+    "title": "Lab 1 — Hooking Your First Method in an Android App",
+    "category": "Mobile",
+    "description": ""
+  },
+  {
+    "slug": "mobile-lab-2-hooking-class-fields-and-modifying-app-logic",
+    "title": "Lab 2 – Hooking Class Fields & Modifying App Logic",
+    "category": "Mobile",
+    "description": ""
+  },
+  {
+    "slug": "mobile-lab-3-modifying-static-variables-in-singleton-classes",
+    "title": "Lab 3 – Modifying Static Variables in Singleton Classes",
+    "category": "Mobile",
+    "description": ""
+  },
+  {
+    "slug": "mobile-lab-4-calling-methods-of-a-non-static-class-using-frida",
+    "title": "Lab 4 — Calling Methods of a Non‑Static Class Using Frida",
+    "category": "Mobile",
+    "description": ""
+  },
+  {
+    "slug": "mobile-lab-config-editor-mobile-rce-full-write-up",
+    "title": "Lab – Config Editor (Mobile RCE) – Full Write‑Up",
+    "category": "Mobile",
+    "description": ""
+  },
+  {
+    "slug": "projects-fakegpt-malware-analysis-walkthrough",
+    "title": "FakeGPT — Malware Analysis Walkthrough",
+    "category": "Malware",
+    "description": ""
+  },
+  {
+    "slug": "projects-redline-lab-memory-analysis",
+    "title": "RedLine Lab - Memory Analysis",
+    "category": "Memory",
+    "description": ""
+  },
+  {
+    "slug": "projects-reveal-lab-incident-response-scenario",
+    "title": "Reveal Lab Incident Response Scenario",
+    "category": "DFIR",
+    "description": ""
+  },
+  {
+    "slug": "projects-reverse-engineering-lab-re101",
+    "title": "Reverse Engineering Lab – RE101",
+    "category": "Reverse Engineering",
+    "description": ""
+  },
+  {
+    "slug": "projects-xlmrat-lab-malware-analysis-and-network-forensics",
+    "title": "XLMRat Lab — Malware Analysis and Network Forensics",
+    "category": "Malware",
+    "description": ""
+  },
+  {
+    "slug": "certs-crtp",
+    "title": "CRTP",
+    "category": "Certification",
+    "description": "CRTP – Certified Red Team Professional The Certified Red Team Professional (CRTP)"
+  },
+  {
+    "slug": "certs-ecdfp",
+    "title": "eCDFP",
+    "category": "Certification",
+    "description": "eCDFP – eLearnSecurity Certified Digital Forensics Professional Hands-on digital forensics training in disk, memory, and network evidence acquisition and analysis. Applied tools like Autopsy, Volatili"
+  },
+  {
+    "slug": "certs-ecir",
+    "title": "eCIR",
+    "category": "Certification",
+    "description": "🔍 eCIR – eLearnSecurity Certified Incident Responder Focused on real-world incident response operations. Covered the IR lifecycle, threat identification, containment, and remediation techniques using"
+  },
+  {
+    "slug": "certs-ecpptv3",
+    "title": "eCPPTv3",
+    "category": "Certification",
+    "description": "eCPPTv3 – Certified Professional Penetration Tester"
+  },
+  {
+    "slug": "certs-ejptv2",
+    "title": "eJPTv2",
+    "category": "Certification",
+    "description": "eJPTv2 – eLearnSecurity Junior Penetration Tester"
+  },
+  {
+    "slug": "certs-ewptx",
+    "title": "eWPTX",
+    "category": "Certification",
+    "description": "🕸️ eWPTX – eLearnSecurity Web Application Penetration Tester eXtreme Focused on advanced web exploitation, eWPTX goes beyond traditional web testing by simulating real-world."
+  },
+  {
+    "slug": "certs-harvard-cs50-cybersecurity",
+    "title": "Harvard CS50 Cybersecurity",
+    "category": "Certification",
+    "description": "Harvard CS50 Introduction to Cybersecurity course"
+  },
+  {
+    "slug": "certs-oscpplus-oscp",
+    "title": "OSCP+ / OSCP",
+    "category": "Certification",
+    "description": "🎯 OSCP / OSCP+ – Offensive Security Certified Professional (Plus)  An advanced, hands-on certification built on the OSCP foundation with extra emphasis on realistic, multi-step attack paths."
+  },
+  {
+    "slug": "certs-securityplus",
+    "title": "Security+",
+    "category": "Certification",
+    "description": "CompTIA Security+ SY0-701"
+  }
+]

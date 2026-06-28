@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Flag, ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Stagger, StaggerItem } from "@/components/reveal";
-import { ctfs } from "@/data/site";
+import { postsByCategory } from "@/data/posts";
 
 export const Route = createFileRoute("/ctf")({
   head: () => ({
@@ -17,32 +17,32 @@ export const Route = createFileRoute("/ctf")({
 });
 
 function CtfPage() {
+  const ctfs = postsByCategory("CTF");
   return (
     <div>
       <PageHeader
-        kicker="03 / ctf"
-        title="Capture the Flag"
+        kicker="CTF"
+        title="Capture the Flag."
         description="Selected CTF writeups — mostly picoCTF — covering forensics, steganography and miscellaneous puzzles. Methodology over speed."
       />
-      <section className="container-prose py-16">
+      <section className="container-prose pb-24">
         <Stagger className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {ctfs.map((c) => (
-            <StaggerItem key={c.title}>
-              <a
-                href={c.href}
-                target="_blank"
-                rel="noreferrer"
-                className="block terminal-frame rounded-lg p-5 h-full group hover:border-primary/60 transition"
+            <StaggerItem key={c.slug}>
+              <Link
+                to="/writeups/$slug"
+                params={{ slug: c.slug }}
+                className="block terminal-frame rounded-2xl p-6 h-full group hover:border-primary/40 hover:-translate-y-0.5 transition"
               >
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-mono text-xs text-primary">
-                    <Flag className="h-3.5 w-3.5" /> {c.event}
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary uppercase tracking-wider">
+                    <Flag className="h-3.5 w-3.5" /> CTF
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition" />
                 </div>
-                <h2 className="mt-3 text-base font-semibold group-hover:text-primary transition">{c.title}</h2>
-                <p className="mt-2 text-mono text-xs text-muted-foreground">{c.category}</p>
-              </a>
+                <h2 className="mt-4 text-lg font-semibold tracking-tight leading-snug group-hover:text-primary transition">{c.title}</h2>
+                {c.description && <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{c.description}</p>}
+              </Link>
             </StaggerItem>
           ))}
         </Stagger>

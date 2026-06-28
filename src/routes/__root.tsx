@@ -13,6 +13,10 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
+// @ts-expect-error - fontsource css side-effect import
+import "@fontsource-variable/inter";
+// @ts-expect-error - fontsource css side-effect import
+import "@fontsource/instrument-serif";
 
 function NotFoundComponent() {
   return (
@@ -92,12 +96,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
-      },
     ],
   }),
   shellComponent: RootShell,
@@ -126,7 +124,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="relative min-h-screen flex flex-col bg-background">
-        <div className="pointer-events-none fixed inset-0 bg-glow opacity-70" aria-hidden />
         <SiteHeader />
         <main className="relative flex-1">
           {/* Required: nested routes render here. */}

@@ -1,30 +1,26 @@
 import { Link } from "@tanstack/react-router";
-import { Terminal, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const nav = [
-  { to: "/", label: "home" },
-  { to: "/certifications", label: "certs" },
-  { to: "/labs", label: "labs" },
-  { to: "/ctf", label: "ctf" },
-  { to: "/bug-bounty", label: "bounty" },
-  { to: "/contact", label: "contact" },
+  { to: "/", label: "Home" },
+  { to: "/writeups", label: "Writeups" },
+  { to: "/certifications", label: "Certs" },
+  { to: "/ctf", label: "CTF" },
+  { to: "/medium", label: "Medium" },
+  { to: "/contact", label: "Contact" },
 ] as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-lg">
-      <div className="container-prose flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-xl">
+      <div className="container-prose flex h-14 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <span className="grid h-9 w-9 place-items-center rounded-md border border-primary/40 text-primary shadow-glow">
-            <Terminal className="h-4 w-4" />
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-foreground text-background text-xs font-semibold">
+            OK
           </span>
-          <span className="text-mono text-sm">
-            <span className="text-muted-foreground">root@</span>
-            <span className="text-foreground">omar</span>
-            <span className="text-primary">:~$</span>
-          </span>
+          <span className="text-sm font-medium tracking-tight">Omar Khalid</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
@@ -32,11 +28,11 @@ export function SiteHeader() {
             <Link
               key={n.to}
               to={n.to}
-              className="text-mono text-xs px-3 py-2 rounded-md text-muted-foreground hover:text-primary hover:bg-secondary/60 transition-colors"
-              activeProps={{ className: "text-mono text-xs px-3 py-2 rounded-md text-primary bg-secondary" }}
+              className="text-[13px] px-3 py-2 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+              activeProps={{ className: "text-[13px] px-3 py-2 rounded-full text-foreground bg-secondary" }}
               activeOptions={{ exact: n.to === "/" }}
             >
-              ./{n.label}
+              {n.label}
             </Link>
           ))}
         </nav>
@@ -51,18 +47,18 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-border bg-background/95">
+        <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl">
           <div className="container-prose py-2 flex flex-col">
             {nav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
                 onClick={() => setOpen(false)}
-                className="text-mono text-sm py-2 text-muted-foreground hover:text-primary"
-                activeProps={{ className: "text-mono text-sm py-2 text-primary" }}
+                className="text-sm py-2.5 text-muted-foreground hover:text-foreground"
+                activeProps={{ className: "text-sm py-2.5 text-foreground font-medium" }}
                 activeOptions={{ exact: n.to === "/" }}
               >
-                ./{n.label}
+                {n.label}
               </Link>
             ))}
           </div>

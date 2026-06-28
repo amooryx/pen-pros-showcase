@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bug, ShieldAlert, ArrowUpRight } from "lucide-react";
+import { Bug, ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Reveal, Stagger, StaggerItem } from "@/components/reveal";
 
@@ -25,17 +25,17 @@ function BountyPage() {
   return (
     <div>
       <PageHeader
-        kicker="04 / research"
-        title="Bug bounty & CVEs"
-        description="Responsible vulnerability research and disclosure. +2 CVEs contributed to the community, with ongoing bounty work across web and mobile targets."
+        kicker="Research"
+        title="Bug bounty & CVEs."
+        description="Responsible vulnerability research and disclosure. CVEs contributed to the community, with ongoing bounty work across web and mobile targets."
       />
-      <section className="container-prose py-16 space-y-12">
+      <section className="container-prose pb-24 space-y-16">
         <Stagger className="grid md:grid-cols-3 gap-4">
           {focus.map((f) => (
             <StaggerItem key={f.title}>
-              <div className="terminal-frame rounded-lg p-6 h-full">
+              <div className="terminal-frame rounded-2xl p-7 h-full">
                 <Bug className="h-5 w-5 text-primary" />
-                <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
+                <h3 className="mt-4 text-lg font-semibold tracking-tight">{f.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
               </div>
             </StaggerItem>
@@ -43,23 +43,18 @@ function BountyPage() {
         </Stagger>
 
         <Reveal>
-          <div className="terminal-frame rounded-2xl p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="terminal-frame rounded-2xl p-8 md:p-10">
             <div className="flex items-start gap-4">
-              <span className="grid h-12 w-12 place-items-center rounded-md bg-primary/10 text-primary border border-primary/30">
-                <ShieldAlert className="h-5 w-5" />
-              </span>
+              <ShieldAlert className="h-5 w-5 text-primary mt-1" />
               <div>
-                <div className="text-mono text-xs text-primary">// disclosure</div>
-                <h2 className="mt-1 text-2xl font-semibold">Found something in scope?</h2>
-                <p className="mt-2 text-muted-foreground max-w-xl">
-                  I follow responsible disclosure timelines and coordinate directly with affected vendors.
-                  For collaboration or disclosure inquiries, reach out via the contact page.
+                <h3 className="text-xl font-semibold tracking-tight">Responsible disclosure</h3>
+                <p className="mt-3 text-muted-foreground leading-relaxed">
+                  Detailed CVE writeups and disclosed advisories will be published here as they
+                  clear coordinated disclosure timelines. Reach out via the contact page for
+                  private disclosure of issues you'd like reviewed.
                 </p>
               </div>
             </div>
-            <a href="/contact" className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-mono text-sm font-medium text-primary-foreground shadow-glow hover:brightness-110 transition">
-              Contact <ArrowUpRight className="h-4 w-4" />
-            </a>
           </div>
         </Reveal>
       </section>
