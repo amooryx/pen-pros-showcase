@@ -161,7 +161,6 @@ export const ctfs: CtfItem[] = [
 
 export const stats = [
   { value: "9+", label: "Certifications" },
-  { value: "+2", label: "CVEs published" },
   { value: "20+", label: "Labs & writeups" },
   { value: "8+", label: "CTF challenges" },
 ];

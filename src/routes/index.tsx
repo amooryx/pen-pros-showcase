@@ -89,7 +89,7 @@ function Index() {
 
       <section className="border-y border-border relative bg-secondary/20 dark:bg-secondary/5">
         <div className="container-prose py-14">
-          <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <Stagger className="grid grid-cols-3 gap-8">
             {stats.map((s) => (
               <StaggerItem key={s.label} className="text-center">
                 <div className="text-5xl md:text-6xl font-semibold tracking-tight">{s.value}</div>
