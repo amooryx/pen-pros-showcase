@@ -17,7 +17,14 @@ function unwrap(m: { default: Post } | Post): Post {
 
 const PRIORITIES: Record<string, number> = {
   "certs-oscpplus-oscp": 100,
-  "certs-crtp": 90,
+  "bug-bounty-smart-contract-predictable-salt": 95,
+  "bug-bounty-prototype-pollution-chartjs": 94,
+  "bug-bounty-unrestricted-file-upload-cdn": 93,
+  "bug-bounty-auth-bypass-ropc": 92,
+  "bug-bounty-blind-ssrf-xmlrpc": 91,
+  "bug-bounty-rate-limit-login-bruteforce": 90,
+  "bug-bounty-session-expiration-logout-failure": 89,
+  "certs-crtp": 88,
   "certs-ewptx": 80,
   "certs-ecpptv3": 70,
   "certs-ecir": 60,

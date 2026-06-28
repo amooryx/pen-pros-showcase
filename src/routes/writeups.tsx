@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Stagger, StaggerItem } from "@/components/reveal";
 import { posts, ALL_CATEGORIES } from "@/data/posts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/writeups")({
   head: () => ({
@@ -19,6 +19,21 @@ export const Route = createFileRoute("/writeups")({
 
 function WriteupsPage() {
   const [active, setActive] = useState<string>("All");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get("category");
+      if (cat) {
+        // Find match in ALL_CATEGORIES ignoring case or exact match
+        const found = ["All", ...ALL_CATEGORIES].find(c => c.toLowerCase() === cat.toLowerCase());
+        if (found) {
+          setActive(found);
+        }
+      }
+    }
+  }, []);
+
   const filtered = active === "All" ? posts : posts.filter((p) => p.category === active);
 
   return (

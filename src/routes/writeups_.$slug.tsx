@@ -59,13 +59,9 @@ function WriteupPage() {
           </Reveal>
           <div className="mt-16 pt-8 border-t border-border flex items-center justify-between text-sm text-muted-foreground">
             <Link to="/writeups" className="hover:text-foreground">← More writeups</Link>
-            {post.category === "Certification" ? (
+            {post.category === "Certification" && (
               <a href="https://www.credential.net/profile/omarkhalidalimohamedahmed701437/wallet" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-primary transition font-medium text-primary">
                  Verify Credential <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            ) : (
-              <a href={post.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-foreground">
-                 Original on GitBook <ExternalLink className="h-3.5 w-3.5" />
               </a>
             )}
           </div>

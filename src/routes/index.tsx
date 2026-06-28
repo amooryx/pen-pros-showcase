@@ -62,6 +62,13 @@ function Index() {
               >
                 Read writeups <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </Link>
+              <Link
+                to="/writeups"
+                search={{ category: "Bug Bounty" } as any}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 dark:bg-background/20 backdrop-blur-md px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition shadow-sm"
+              >
+                Bug bounty reports
+              </Link>
               <a
                 href="/CV.pdf"
                 download="Omar_Khalid_CV.pdf"
