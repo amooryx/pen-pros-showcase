@@ -231,7 +231,7 @@ function Index() {
               {
                 title: "LEAP 2025 Tech Summit Showcase",
                 category: "Summit • March 2025",
-                image: "/images/events/leap-2025.jpeg",
+                image: "/images/events/leap-2025-2.jpeg",
                 desc: "Participated in the world's most attended tech event in Riyadh, networking with global innovators."
               }
             ].map((e) => (
