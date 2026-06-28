@@ -15,11 +15,30 @@ function unwrap(m: { default: Post } | Post): Post {
   return (m as { default?: Post }).default ?? (m as Post);
 }
 
+const PRIORITIES: Record<string, number> = {
+  "certs-oscpplus-oscp": 100,
+  "certs-crtp": 90,
+  "certs-ewptx": 80,
+  "certs-ecpptv3": 70,
+  "certs-ecir": 60,
+  "certs-ecdfp": 50,
+  "certs-ejptv2": 30,
+  "certs-securityplus": 20,
+  "certs-harvard-cs50-cybersecurity": 10,
+};
+
 export const posts: Post[] = Object.entries(modules)
   .filter(([p]) => !p.endsWith("_index.json"))
   .map(([, m]) => unwrap(m))
   .filter((p) => p && p.slug && p.markdown)
-  .sort((a, b) => a.title.localeCompare(b.title));
+  .sort((a, b) => {
+    const prioA = PRIORITIES[a.slug] || 0;
+    const prioB = PRIORITIES[b.slug] || 0;
+    if (prioA !== prioB) {
+      return prioB - prioA;
+    }
+    return a.title.localeCompare(b.title);
+  });
 
 export const postsBySlug: Record<string, Post> = Object.fromEntries(
   posts.map((p) => [p.slug, p]),

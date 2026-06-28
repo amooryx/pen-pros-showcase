@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, ShieldCheck, Bug, ScanLine } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ShieldCheck, Bug, ScanLine, Crosshair } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/reveal";
 import { posts, postsByCategory } from "@/data/posts";
 import { stats, skills } from "@/data/site";
@@ -100,27 +100,28 @@ function Index() {
           </Reveal>
           <Reveal delay={0.05}>
             <h2 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
-              Breaker, defender, writer.
+              Breaker, researcher, writer.
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-              Offensive Security Engineer with deep experience in vulnerability assessment,
-              penetration testing and adversarial simulation across web, mobile and enterprise
-              networks. Equally passionate about the defensive side — from incident response
-              to memory and malware analysis.
+              Offensive Security Engineer specializing in penetration testing (VAPT) and adversarial
+              simulation (Red Teaming) across networks, Active Directory forests, web apps, and mobile
+              platforms. Focused on emulating realistic attack paths to discover critical flaws, backed by
+              certification credentials (OSCP+, CRTP, eWPTX) and a strong foundation in digital forensics and incident response.
             </p>
           </Reveal>
         </div>
 
-        <Stagger className="mt-16 grid md:grid-cols-3 gap-4">
+        <Stagger className="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {skills.map((g) => (
             <StaggerItem key={g.group}>
               <div className="border border-border/80 dark:border-border/30 bg-card/50 dark:bg-card/25 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/45 transition duration-300 shadow-sm">
                 <div className="flex items-center gap-2 text-sm font-medium">
-                  {g.group === "Offensive" && <Bug className="h-4 w-4 text-primary" />}
-                  {g.group === "Defensive / DFIR" && <ShieldCheck className="h-4 w-4 text-primary" />}
-                  {g.group === "Tooling" && <ScanLine className="h-4 w-4 text-primary" />}
+                  {g.group.includes("Testing") && <Bug className="h-4 w-4 text-primary" />}
+                  {g.group.includes("Red Teaming") && <Crosshair className="h-4 w-4 text-primary" />}
+                  {g.group.includes("Defensive") && <ShieldCheck className="h-4 w-4 text-primary" />}
+                  {g.group.includes("Tooling") && <ScanLine className="h-4 w-4 text-primary" />}
                   {g.group}
                 </div>
                 <ul className="mt-5 flex flex-wrap gap-1.5">

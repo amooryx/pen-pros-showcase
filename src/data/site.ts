@@ -168,15 +168,19 @@ export const stats = [
 
 export const skills: { group: string; items: string[] }[] = [
   {
-    group: "Offensive",
-    items: ["Network Pentesting", "Web App Pentesting", "Mobile (Android) Pentesting", "Active Directory", "Red Team Ops", "Privilege Escalation"],
+    group: "Penetration Testing (PT)",
+    items: ["Network Pentesting", "Web App Pentesting", "Mobile Pentesting (Android & iOS)", "API Security Testing", "Vulnerability Assessment", "Thick Client Pentesting", "Privilege Escalation"],
+  },
+  {
+    group: "Red Teaming",
+    items: ["Active Directory Attacks", "Evasion & AV/EDR Bypass", "Lateral Movement", "Kerberos Exploitation", "C2 Infrastructure", "Phishing & Initial Access", "Persistence Tactics"],
   },
   {
     group: "Defensive / DFIR",
-    items: ["Incident Response", "Digital Forensics", "Memory Analysis", "Malware Analysis", "Threat Hunting", "SIEM / EDR"],
+    items: ["Incident Response", "Digital Forensics", "Threat Hunting", "Memory Analysis", "Malware Analysis"],
   },
   {
-    group: "Tooling",
-    items: ["Burp Suite", "Nmap", "Metasploit", "Frida", "Ghidra", "Volatility", "Wireshark", "Autopsy", "BloodHound", "Impacket"],
+    group: "Security Tooling",
+    items: ["Burp Suite", "Nmap", "Metasploit", "Frida", "Ghidra", "BloodHound", "Impacket", "Volatility", "Wireshark", "Autopsy"],
   },
 ];

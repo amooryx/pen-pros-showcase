@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, BookOpen, Github, Linkedin } from "lucide-react";
+import { Mail, Github, Linkedin, MessageSquare } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Stagger, StaggerItem } from "@/components/reveal";
+import { siteConfig } from "@/config/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,14 +16,38 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
-const channels = [
-  { icon: Mail, label: "Email", value: "omar@example.com", href: "mailto:omar@example.com", note: "Best for engagements and disclosure." },
-  { icon: BookOpen, label: "Medium", value: "medium.com/@omar-khalid", href: "https://medium.com/", note: "Long-form articles and writeups." },
-  { icon: Linkedin, label: "LinkedIn", value: "linkedin.com/in/omar-khalid", href: "https://www.linkedin.com/", note: "Professional network." },
-  { icon: Github, label: "GitHub", value: "github.com/omar-khalid", href: "https://github.com/", note: "Tools, scripts and PoCs." },
-];
-
 function ContactPage() {
+  const channels = [
+    { 
+      icon: Mail, 
+      label: "Email", 
+      value: "khalideldemery@gmail.com", 
+      href: siteConfig.socials.email, 
+      note: "Best for engagements and professional inquiries." 
+    },
+    { 
+      icon: Linkedin, 
+      label: "LinkedIn", 
+      value: "Omar Khalid", 
+      href: siteConfig.socials.linkedin, 
+      note: "Professional network & direct messaging." 
+    },
+    { 
+      icon: Github, 
+      label: "GitHub", 
+      value: "amooryx", 
+      href: siteConfig.socials.github, 
+      note: "Vulnerability PoCs, tooling, and repositories." 
+    },
+    { 
+      icon: MessageSquare, 
+      label: "Discord", 
+      value: siteConfig.socials.discord, 
+      href: `https://discord.com/users/${siteConfig.socials.discord}`, 
+      note: "Real-time communication & networking." 
+    },
+  ];
+
   return (
     <div>
       <PageHeader
@@ -38,7 +63,7 @@ function ContactPage() {
                 href={c.href}
                 target={c.href.startsWith("http") ? "_blank" : undefined}
                 rel="noreferrer"
-                className="block terminal-frame rounded-2xl p-7 h-full group hover:border-primary/40 hover:-translate-y-0.5 transition"
+                className="block border border-border/85 dark:border-border/35 bg-card/60 dark:bg-card/20 backdrop-blur-md rounded-2xl p-7 h-full group hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 transition duration-300 shadow-sm hover:shadow-md hover:shadow-primary/5 dark:hover:shadow-primary/5"
               >
                 <div className="flex items-center gap-4">
                   <span className="grid h-11 w-11 place-items-center rounded-full bg-secondary text-foreground">
