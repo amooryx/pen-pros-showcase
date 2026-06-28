@@ -2,15 +2,22 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const nav = [
+interface NavItem {
+  to: string;
+  label: string;
+  search?: Record<string, string>;
+}
+
+const nav: NavItem[] = [
   { to: "/", label: "Home" },
   { to: "/writeups", label: "Writeups" },
+  { to: "/writeups", search: { category: "Tools" }, label: "Tools" },
   { to: "/certifications", label: "Certs" },
   { to: "/ctf", label: "CTF" },
   { to: "/events", label: "Events" },
   { to: "/medium", label: "Medium" },
   { to: "/contact", label: "Contact" },
-] as const;
+];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -57,8 +64,9 @@ export function SiteHeader() {
           <nav className="hidden md:flex items-center gap-1">
             {nav.map((n) => (
               <Link
-                key={n.to}
+                key={n.label}
                 to={n.to}
+                search={n.search as any}
                 className="text-[13px] px-3 py-2 rounded-full text-muted-foreground hover:text-foreground transition-colors"
                 activeProps={{ className: "text-[13px] px-3 py-2 rounded-full text-foreground bg-secondary" }}
                 activeOptions={{ exact: n.to === "/" }}
@@ -91,8 +99,9 @@ export function SiteHeader() {
           <div className="container-prose py-2 flex flex-col">
             {nav.map((n) => (
               <Link
-                key={n.to}
+                key={n.label}
                 to={n.to}
+                search={n.search as any}
                 onClick={() => setOpen(false)}
                 className="text-sm py-2.5 text-muted-foreground hover:text-foreground"
                 activeProps={{ className: "text-sm py-2.5 text-foreground font-medium" }}
