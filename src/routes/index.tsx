@@ -141,7 +141,7 @@ function Index() {
                 category: "Community • 2024",
                 image: "/images/events/gdsc.jpeg",
                 desc: "Led workshops, guided student developers, and grew our local Google developer community.",
-                position: "object-cover object-[center_10%]"
+                position: "object-cover object-[center_18%] scale-[1.1]"
               },
               {
                 title: "1st Place — AJA CTF Competition",
