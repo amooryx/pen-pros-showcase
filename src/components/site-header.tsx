@@ -10,7 +10,6 @@ interface NavItem {
 
 const nav: NavItem[] = [
   { to: "/", label: "Home" },
-  { to: "/writeups", label: "Writeups" },
   { to: "/writeups", search: { category: "Tools" }, label: "Tools" },
   { to: "/certifications", label: "Certs" },
   { to: "/ctf", label: "CTF" },
