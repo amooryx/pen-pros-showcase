@@ -24,12 +24,12 @@ interface BugHuntProps {
   buttonRef: React.RefObject<HTMLAnchorElement | null>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   nameRef: React.RefObject<HTMLHeadingElement | null>;
-  setBugStage: (stage: "flying" | "landed" | "targeted" | "shot" | "dead") => void;
+  setBugStage: (stage: "flying" | "landed" | "smashed" | "dead") => void;
 }
 
 function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps) {
   const [coords, setCoords] = useState<{ x: number; y: number; spawnX: number; spawnY: number } | null>(null);
-  const [stage, setStage] = useState<"flying" | "landed" | "targeted" | "shot" | "dead">("flying");
+  const [stage, setStage] = useState<"flying" | "landed" | "smashed" | "dead">("flying");
 
   const measureCoords = () => {
     if (buttonRef.current && containerRef.current && nameRef.current) {
@@ -39,8 +39,8 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
       setCoords({
         x: btnRect.left - containerRect.left + btnRect.width / 2,
         y: btnRect.top - containerRect.top + btnRect.height / 2,
-        spawnX: nameRect.right - containerRect.left,
-        spawnY: nameRect.top - containerRect.top,
+        spawnX: nameRect.right - containerRect.left + 50,
+        spawnY: nameRect.top - containerRect.top - 20,
       });
     }
   };
@@ -83,7 +83,7 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                     ],
                     y: [
                       coords.spawnY, 
-                      coords.spawnY - 50, 
+                      coords.spawnY - 40, 
                       coords.spawnY + 80, 
                       coords.y - 60, 
                       coords.y
@@ -91,17 +91,19 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                     rotate: [45, 90, -45, 120, 0],
                     opacity: [0, 1, 1, 1, 1],
                   }
-                : stage === "landed" || stage === "targeted"
+                : stage === "landed"
                 ? {
                     x: coords.x,
                     y: coords.y,
                     rotate: 0,
                     opacity: 1,
+                    scale: 1,
                   }
                 : {
                     x: coords.x,
-                    y: coords.y + 400,
+                    y: coords.y,
                     rotate: 180,
+                    scale: 0.1,
                     opacity: 0,
                   }
             }
@@ -112,22 +114,22 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                     ease: "easeInOut",
                     times: [0, 0.25, 0.5, 0.75, 1],
                   }
-                : stage === "shot"
+                : stage === "smashed"
                 ? {
-                    duration: 1.0,
-                    ease: "easeIn",
+                    duration: 0.4,
+                    ease: "easeOut",
                   }
                 : {}
             }
             onAnimationComplete={() => {
               if (stage === "flying") {
                 setStage("landed");
-                setTimeout(() => setStage("targeted"), 1000);
-              } else if (stage === "shot") {
+                setTimeout(() => setStage("smashed"), 1200);
+              } else if (stage === "smashed") {
                 setStage("dead");
                 setTimeout(() => {
                   setStage("flying");
-                }, 4000);
+                }, 4500);
               }
             }}
           >
@@ -138,7 +140,7 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                     ? { rotate: [-10, 10, -10], scale: [1, 1.1, 1] }
                     : stage === "landed"
                     ? { y: [0, -1.5, 0] }
-                    : { scale: 0.95 }
+                    : { scale: 0.2 }
                 }
                 transition={{
                   repeat: Infinity,
@@ -147,11 +149,7 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                 }}
                 className={`flex items-center justify-center p-1.5 transition-colors duration-300`}
               >
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className={
-                  stage === "shot"
-                    ? "text-red-500"
-                    : "text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
-                }>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-foreground/80 dark:text-muted-foreground/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
                   <line x1="16" y1="8" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" />
                   
                   <path d="M12 14 C10 16, 9 20, 11 22" stroke="currentColor" strokeWidth="1" />
@@ -184,36 +182,41 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                   />
                 </svg>
               </motion.div>
-
-              {(stage === "targeted" || stage === "shot") && (
-                <motion.div
-                  initial={{ scale: 3, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  onAnimationComplete={() => {
-                    if (stage === "targeted") {
-                      setTimeout(() => setStage("shot"), 800);
-                    }
-                  }}
-                  className="absolute -inset-3 flex items-center justify-center"
-                >
-                  <div className="absolute inset-0 rounded-full border border-red-500/30 animate-ping duration-1000" />
-                  <Crosshair className="h-10 w-10 text-red-500 animate-spin" style={{ animationDuration: "10s" }} />
-                  <div className="absolute h-1.5 w-1.5 rounded-full bg-red-600 shadow-md shadow-red-500" />
-                </motion.div>
-              )}
-
-              {stage === "shot" && (
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: [1, 3, 0], opacity: [0.9, 1, 0] }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute -inset-10 bg-gradient-radial from-red-500/30 to-transparent rounded-full flex items-center justify-center pointer-events-none"
-                >
-                  <div className="absolute w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
-                </motion.div>
-              )}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Blood Splat Overlay on smash */}
+      <AnimatePresence>
+        {(stage === "smashed" || stage === "dead") && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.85 }}
+            exit={{ scale: 0, opacity: 0, transition: { duration: 0.3 } }}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+            style={{ 
+              left: coords.x, 
+              top: coords.y, 
+              x: "-50%", 
+              y: "-50%" 
+            }}
+            className="absolute z-10 flex items-center justify-center pointer-events-none"
+          >
+            <svg width="48" height="48" viewBox="0 0 40 40" fill="none" className="text-red-600 dark:text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]">
+              <path d="M20 12 C15 12, 12 15, 12 20 C12 25, 15 28, 20 28 C25 28, 28 25, 28 20 C28 15, 25 12, 20 12 Z" fill="currentColor" />
+              <path d="M12 20 C9 20, 6 18, 6 20 C6 22, 9 21, 12 20 Z" fill="currentColor" />
+              <path d="M28 20 C31 20, 34 22, 34 20 C34 18, 31 19, 28 20 Z" fill="currentColor" />
+              <path d="M20 12 C20 9, 22 6, 20 6 C18 6, 19 9, 20 12 Z" fill="currentColor" />
+              <path d="M20 28 C20 31, 18 34, 20 34 C22 34, 21 31, 20 28 Z" fill="currentColor" />
+              <circle cx="10" cy="10" r="1.5" fill="currentColor" />
+              <circle cx="30" cy="30" r="2" fill="currentColor" />
+              <circle cx="9" cy="29" r="1.2" fill="currentColor" />
+              <circle cx="31" cy="9" r="1.8" fill="currentColor" />
+              <path d="M15 15 C13 13, 10 11, 11 10 C12 9, 14 12, 15 15 Z" fill="currentColor" />
+              <path d="M25 25 C27 27, 30 29, 29 30 C28 31, 26 28, 25 25 Z" fill="currentColor" />
+            </svg>
+            <div className="absolute w-12 h-12 rounded-full border border-red-500/20 animate-ping duration-700 pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -224,7 +227,7 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
 function Index() {
   const featuredCerts = postsByCategory("Certification").slice(0, 6);
   const featuredLabs = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
-  const [bugStage, setBugStage] = useState<"flying" | "landed" | "targeted" | "shot" | "dead">("flying");
+  const [bugStage, setBugStage] = useState<"flying" | "landed" | "smashed" | "dead">("flying");
   const containerRef = useRef<HTMLDivElement>(null);
   const bugBountyRef = useRef<HTMLAnchorElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
@@ -248,23 +251,46 @@ function Index() {
             </div>
           </Reveal>
           <Reveal delay={0.05} className="relative">
-            {/* Tech Blueprint Draw Background */}
-            <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none opacity-30 dark:opacity-20 select-none">
-              <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full max-w-[600px] h-auto overflow-visible">
-                <circle cx="300" cy="100" r="140" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" strokeDasharray="4 4" />
-                <circle cx="300" cy="100" r="105" stroke="currentColor" className="text-muted-foreground/15 dark:text-muted-foreground/10" strokeWidth="1" />
-                <circle cx="300" cy="100" r="70" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" />
+            {/* Silhouette Branch with Resting Mosquitoes */}
+            <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none opacity-25 dark:opacity-15 select-none overflow-visible">
+              <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full max-w-[600px] h-auto overflow-visible text-muted-foreground/60 dark:text-muted-foreground/40">
+                <path 
+                  d="M50 120 C 150 110, 220 90, 320 80 C 400 72, 480 85, 550 95 M 280 85 C 310 65, 340 50, 390 40 M 350 78 C 380 95, 420 110, 460 120 M 470 82 C 490 60, 520 50, 540 45" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5" 
+                  strokeLinecap="round" 
+                />
+                <path 
+                  d="M100 115 C 130 100, 160 95, 190 92 M 420 112 C 435 125, 450 135, 465 140" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                />
                 
-                <line x1="300" y1="-20" x2="300" y2="220" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="100" y1="100" x2="500" y2="100" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" strokeDasharray="3 3" />
+                {/* Resting insects on the branch */}
+                <g transform="translate(180, 84) rotate(-10) scale(0.6)" className="opacity-70">
+                  <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
+                  <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
+                  <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                  <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                </g>
                 
-                <path d="M 405 100 A 105 105 0 0 0 374.2 25.8" stroke="currentColor" className="text-muted-foreground/20 dark:text-muted-foreground/15" strokeWidth="1.5" />
-                <text x="390" y="55" className="text-[10px] font-mono fill-muted-foreground/30 font-semibold uppercase tracking-widest">45.00°</text>
-                
-                <path d="M 120 40 L 100 40 L 100 60" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
-                <path d="M 480 40 L 500 40 L 500 60" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
-                <path d="M 120 160 L 100 160 L 100 140" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
-                <path d="M 480 160 L 500 160 L 500 140" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
+                <g transform="translate(330, 42) rotate(15) scale(0.6)" className="opacity-70">
+                  <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
+                  <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
+                  <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                  <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                </g>
+
+                <g transform="translate(430, 107) rotate(-25) scale(0.6)" className="opacity-70">
+                  <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
+                  <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
+                  <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                  <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                </g>
               </svg>
             </div>
             
@@ -295,14 +321,17 @@ function Index() {
                 ref={bugBountyRef}
                 to="/writeups"
                 search={{ category: "Bug Bounty" } as any}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-6 py-3 text-sm font-medium transition-all shadow-sm duration-300 ${
-                  bugStage === "shot"
-                    ? "border-red-500 bg-red-500/10 text-red-500 scale-95 shadow-red-500/20"
+                className={`inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium transition-all shadow-sm duration-300 ${
+                  bugStage === "smashed"
+                    ? "border-red-600 bg-red-600/10 text-red-600 scale-95 shadow-red-600/20"
                     : bugStage === "dead"
-                    ? "border-green-500/40 bg-green-500/10 text-green-600 dark:text-green-400 shadow-md shadow-green-500/10 scale-100"
+                    ? "border-red-600/40 bg-red-500/5 text-red-600 dark:text-red-400 shadow-md shadow-red-500/10 scale-100"
                     : "border-border bg-background/50 dark:bg-background/20 backdrop-blur-md text-foreground hover:bg-secondary"
                 }`}
               >
+                {bugStage === "dead" && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-600 dark:bg-red-500 animate-pulse shadow-sm shadow-red-600" />
+                )}
                 Bug bounty reports
               </Link>
               <a
