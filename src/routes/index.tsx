@@ -224,6 +224,66 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
   );
 }
 
+function FlockOfBirds() {
+  const birds = [
+    { id: 1, startX: 180, startY: 74, endX: -250, endY: -150, delay: 0.8, duration: 4.5, angle: -10 },
+    { id: 2, startX: 280, startY: 75, endX: -180, endY: -180, delay: 1.0, duration: 4.0, angle: 15 },
+    { id: 3, startX: 350, startY: 65, endX: 250, endY: -160, delay: 0.9, duration: 4.8, angle: -5 },
+    { id: 4, startX: 470, startY: 72, endX: 400, endY: -140, delay: 1.1, duration: 4.2, angle: -20 },
+    { id: 5, startX: 520, startY: 82, endX: 150, endY: -220, delay: 1.05, duration: 5.0, angle: 25 },
+  ];
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-visible">
+      {birds.map((b) => {
+        const isLeft = b.endX < 0;
+        return (
+          <motion.div
+            key={b.id}
+            className="absolute text-muted-foreground/60 dark:text-muted-foreground/45"
+            style={{ 
+              left: b.startX, 
+              top: b.startY,
+              transformOrigin: "center" 
+            }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0.5, rotate: b.angle }}
+            animate={{
+              x: [0, 0, b.endX * 0.3, b.endX * 0.6, b.endX],
+              y: [0, 0, b.endY * 0.4, b.endY * 0.8, b.endY],
+              opacity: [1, 1, 1, 0.7, 0],
+              scale: [0.5, 0.5, 0.6, 0.4, 0.2],
+              rotate: [b.angle, b.angle, isLeft ? -30 : 30, isLeft ? -45 : 45, isLeft ? -60 : 60],
+            }}
+            transition={{
+              duration: b.duration,
+              times: [0, b.delay / b.duration, (b.delay + 0.3) / b.duration, (b.delay + 1.5) / b.duration, 1],
+              ease: "easeInOut",
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="overflow-visible">
+              <motion.path
+                d="M2 14 C6 8, 9 8, 12 12 C15 8, 18 8, 22 14 C18 11, 15 11, 12 13 C9 11, 6 11, 2 14 Z"
+                animate={{
+                  d: [
+                    "M2 14 C6 8, 9 8, 12 12 C15 8, 18 8, 22 14 C18 11, 15 11, 12 13 C9 11, 6 11, 2 14 Z",
+                    "M2 10 C6 13, 9 13, 12 11 C15 13, 18 13, 22 10 C18 11, 15 11, 12 12 C9 11, 6 11, 2 10 Z",
+                    "M2 14 C6 8, 9 8, 12 12 C15 8, 18 8, 22 14 C18 11, 15 11, 12 13 C9 11, 6 11, 2 14 Z"
+                  ]
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 0.25,
+                  ease: "easeInOut"
+                }}
+              />
+            </svg>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Index() {
   const featuredCerts = postsByCategory("Certification").slice(0, 6);
   const featuredLabs = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
@@ -253,45 +313,34 @@ function Index() {
           <Reveal delay={0.05} className="relative">
             {/* Silhouette Branch with Resting Mosquitoes */}
             <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none opacity-25 dark:opacity-15 select-none overflow-visible">
-              <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full max-w-[600px] h-auto overflow-visible text-muted-foreground/60 dark:text-muted-foreground/40">
-                <path 
-                  d="M50 120 C 150 110, 220 90, 320 80 C 400 72, 480 85, 550 95 M 280 85 C 310 65, 340 50, 390 40 M 350 78 C 380 95, 420 110, 460 120 M 470 82 C 490 60, 520 50, 540 45" 
-                  stroke="currentColor" 
-                  strokeWidth="2.5" 
-                  strokeLinecap="round" 
-                />
-                <path 
-                  d="M100 115 C 130 100, 160 95, 190 92 M 420 112 C 435 125, 450 135, 465 140" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                />
+              <div className="relative w-full max-w-[600px] h-[200px] overflow-visible">
+                <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full h-full text-muted-foreground/60 dark:text-muted-foreground/40 overflow-visible">
+                  <path 
+                    d="M50 120 C 150 110, 220 90, 320 80 C 400 72, 480 85, 550 95 M 280 85 C 310 65, 340 50, 390 40 M 350 78 C 380 95, 420 110, 460 120 M 470 82 C 490 60, 520 50, 540 45" 
+                    stroke="currentColor" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                  />
+                  <path 
+                    d="M100 115 C 130 100, 160 95, 190 92 M 420 112 C 435 125, 450 135, 465 140" 
+                    stroke="currentColor" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                  />
+                  
+                  {/* One resting mosquito silhouette that stays on the branch */}
+                  <g transform="translate(140, 102) rotate(-15) scale(0.5)" className="opacity-60 text-muted-foreground">
+                    <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
+                    <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
+                    <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                    <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
+                  </g>
+                </svg>
                 
-                {/* Resting insects on the branch */}
-                <g transform="translate(180, 84) rotate(-10) scale(0.6)" className="opacity-70">
-                  <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
-                  <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
-                  <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                  <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                </g>
-                
-                <g transform="translate(330, 42) rotate(15) scale(0.6)" className="opacity-70">
-                  <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
-                  <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
-                  <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                  <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                </g>
-
-                <g transform="translate(430, 107) rotate(-25) scale(0.6)" className="opacity-70">
-                  <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
-                  <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
-                  <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                  <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                </g>
-              </svg>
+                {/* Looping Flock of Birds */}
+                {bugStage === "flying" && <FlockOfBirds />}
+              </div>
             </div>
             
             <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block">
