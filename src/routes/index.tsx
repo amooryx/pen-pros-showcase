@@ -1,521 +1,373 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+﻿import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, ShieldCheck, Bug, ScanLine, Crosshair } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/reveal";
 import { posts, postsByCategory } from "@/data/posts";
 import { stats, skills } from "@/data/site";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/")(({
   head: () => ({
     meta: [
-      { title: "Omar Khalid — Offensive Security Engineer (VAPT)" },
-      { name: "description", content: "Portfolio of Omar Khalid — OSCP+, OSCP, CRTP, eWPTX, eCPPT, eCIR, eCDFP, eJPT, Security+. Full writeups, certifications, CTFs and research, all in one place." },
-      { property: "og:title", content: "Omar Khalid — Offensive Security Engineer (VAPT)" },
+      { title: "Omar Khalid â€” Offensive Security Engineer (VAPT)" },
+      { name: "description", content: "Portfolio of Omar Khalid â€” OSCP+, OSCP, CRTP, eWPTX, eCPPT, eCIR, eCDFP, eJPT, Security+. Full writeups, certifications, CTFs and research, all in one place." },
+      { property: "og:title", content: "Omar Khalid â€” Offensive Security Engineer (VAPT)" },
       { property: "og:description", content: "Portfolio: certifications, labs, CTFs, CVEs and writeups across web, mobile, AD, malware and DFIR." },
     ],
   }),
   component: Index,
-});
+}));
 
 const LAB_CATS = ["Mobile", "Reverse Engineering", "Malware", "DFIR", "Memory"];
-type AnimationStage = 'resting' | 'flying' | 'smashed';
 
-interface BugHuntProps {
-  buttonRef: React.RefObject<HTMLAnchorElement | null>;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  nameRef: React.RefObject<HTMLHeadingElement | null>;
-  setBugStage: (stage: AnimationStage) => void;
-}
+// â”€â”€â”€ Clean state machine â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+type AnimationStage = "ambient_flight" | "landing" | "resting";
 
-function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps) {
-  const [coords, setCoords] = useState<{ x: number; y: number; spawnX: number; spawnY: number } | null>(null);
-  const [stage, setStage] = useState<AnimationStage>('flying');
-
-  useEffect(() => {
-    let animationFrameId: number;
-    const checkAndMeasure = () => {
-      if (buttonRef.current && containerRef.current && nameRef.current) {
-        const btnRect = buttonRef.current.getBoundingClientRect();
-        const nameRect = nameRef.current.getBoundingClientRect();
-        const containerRect = containerRef.current.getBoundingClientRect();
-        // Calculate coords relative to the container
-        if (btnRect.width > 0 && nameRect.width > 0) {
-          setCoords({
-            x: btnRect.left - containerRect.left + btnRect.width / 2,
-            y: btnRect.top - containerRect.top + btnRect.height / 2,
-            spawnX: nameRect.right - containerRect.left + 50,
-            spawnY: nameRect.top - containerRect.top - 20,
-          });
-          return; // Stop checking
-        }
-      }
-      animationFrameId = requestAnimationFrame(checkAndMeasure);
-    };
-
-    checkAndMeasure();
-
-    const handleResize = () => {
-      if (buttonRef.current && containerRef.current && nameRef.current) {
-        const btnRect = buttonRef.current.getBoundingClientRect();
-        const nameRect = nameRef.current.getBoundingClientRect();
-        const containerRect = containerRef.current.getBoundingClientRect();
-        setCoords({
-          x: btnRect.left - containerRect.left + btnRect.width / 2,
-          y: btnRect.top - containerRect.top + btnRect.height / 2,
-          spawnX: nameRect.right - containerRect.left + 50,
-          spawnY: nameRect.top - containerRect.top - 20,
-        });
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    setBugStage(stage);
-  }, [stage, setBugStage]);
-
-  if (!coords) return null;
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
-      <AnimatePresence>
-        {stage !== "smashed" && (
-          <motion.div
-            className="absolute"
-            style={{ x: 0, y: 0, originX: 0.5, originY: 0.5 }}
-            initial={{ x: coords.spawnX, y: coords.spawnY, opacity: 0, rotate: 45 }}
-            animate={
-              stage === "flying"
-                ? {
-                    x: [
-                      coords.spawnX, 
-                      coords.spawnX + 150, 
-                      coords.spawnX - 100, 
-                      coords.x - 120, 
-                      coords.x
-                    ],
-                    y: [
-                      coords.spawnY, 
-                      coords.spawnY - 40, 
-                      coords.spawnY + 80, 
-                      coords.y - 60, 
-                      coords.y
-                    ],
-                    rotate: [45, 90, -45, 120, 0],
-                    opacity: [0, 1, 1, 1, 1],
-                  }
-                : stage === "resting"
-                ? {
-                    x: coords.spawnX,
-                    y: coords.spawnY,
-                    opacity: 0,
-                    scale: 1,
-                  }
-                : {}
-            }
-            transition={
-              stage === "flying"
-                ? {
-                    duration: 5.5,
-                    ease: "easeInOut",
-                    times: [0, 0.25, 0.5, 0.75, 1],
-                  }
-                : {}
-            }
-            onAnimationComplete={() => {
-              if (stage === "flying") {
-                // Mosquito landed, smash it instantly
-                setStage("smashed");
-                setTimeout(() => {
-                  setStage("resting");
-                  setTimeout(() => setStage("flying"), 100);
-                }, 4500);
-              }
-            }}
-          >
-            <div className="relative -left-4 -top-4">
-              <motion.div
-                animate={
-                  stage === "flying"
-                    ? { rotate: [-10, 10, -10], scale: [1, 1.1, 1] }
-                    : { scale: 0.2, opacity: 0 }
-                }
-                transition={{
-                  repeat: stage === "flying" ? Infinity : 0,
-                  duration: 0.08,
-                  ease: "easeInOut",
-                }}
-                className={`flex items-center justify-center p-1.5 transition-colors duration-300`}
-              >
-                {/* Custom Mosquito SVG Sprite */}
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-foreground/80 dark:text-muted-foreground/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
-                  {/* Proboscis */}
-                  <line x1="16" y1="8" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" />
-                  
-                  {/* Legs */}
-                  <path d="M12 14 C10 16, 9 20, 11 22" stroke="currentColor" strokeWidth="1" />
-                  <path d="M20 14 C22 16, 23 20, 21 22" stroke="currentColor" strokeWidth="1" />
-                  <path d="M11 16 C9 18, 9 22, 10 24" stroke="currentColor" strokeWidth="0.8" />
-                  <path d="M21 16 C23 18, 23 22, 22 24" stroke="currentColor" strokeWidth="0.8" />
-                  <path d="M14 12 C10 10, 8 12, 6 14" stroke="currentColor" strokeWidth="0.8" />
-                  <path d="M18 12 C22 10, 24 12, 26 14" stroke="currentColor" strokeWidth="0.8" />
-                  
-                  {/* Thorax */}
-                  <ellipse cx="16" cy="13" rx="2" ry="4" fill="currentColor" />
-                  {/* Abdomen */}
-                  <path d="M16 17 L16 26" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  
-                  {/* Wings */}
-                  <motion.path
-                    d="M15 12 C10 8, 4 9, 6 15 C8 19, 12 16, 15 13"
-                    fill="currentColor"
-                    fillOpacity="0.4"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    style={{ transformOrigin: "15px 12px" }}
-                    animate={stage === "flying" ? { rotateZ: [0, -45, 0], scaleY: [1, 0.6, 1] } : {}}
-                    transition={{ repeat: Infinity, duration: 0.1, ease: "easeInOut" }}
-                  />
-                  <motion.path
-                    d="M17 12 C22 8, 28 9, 26 15 C24 19, 20 16, 17 13"
-                    fill="currentColor"
-                    fillOpacity="0.4"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    style={{ transformOrigin: "17px 12px" }}
-                    animate={stage === "flying" ? { rotateZ: [0, 45, 0], scaleY: [1, 0.6, 1] } : {}}
-                    transition={{ repeat: Infinity, duration: 0.1, ease: "easeInOut" }}
-                  />
-                </svg>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Blood Splat Overlay on smash */}
-      <AnimatePresence>
-        {stage === "smashed" && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.85 }}
-            exit={{ scale: 0, opacity: 0, transition: { duration: 0.3 } }}
-            transition={{ type: "spring", stiffness: 300, damping: 15 }}
-            style={{ 
-              left: coords.x, 
-              top: coords.y, 
-              x: "-50%", 
-              y: "-50%" 
-            }}
-            className="absolute z-10 flex items-center justify-center pointer-events-none"
-          >
-            <svg width="48" height="48" viewBox="0 0 40 40" fill="none" className="text-red-600 dark:text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]">
-              <path d="M20 12 C15 12, 12 15, 12 20 C12 25, 15 28, 20 28 C25 28, 28 25, 28 20 C28 15, 25 12, 20 12 Z" fill="currentColor" />
-              <path d="M12 20 C9 20, 6 18, 6 20 C6 22, 9 21, 12 20 Z" fill="currentColor" />
-              <path d="M28 20 C31 20, 34 22, 34 20 C34 18, 31 19, 28 20 Z" fill="currentColor" />
-              <path d="M20 12 C20 9, 22 6, 20 6 C18 6, 19 9, 20 12 Z" fill="currentColor" />
-              <path d="M20 28 C20 31, 18 34, 20 34 C22 34, 21 31, 20 28 Z" fill="currentColor" />
-              <circle cx="10" cy="10" r="1.5" fill="currentColor" />
-              <circle cx="30" cy="30" r="2" fill="currentColor" />
-              <circle cx="9" cy="29" r="1.2" fill="currentColor" />
-              <circle cx="31" cy="9" r="1.8" fill="currentColor" />
-              <path d="M15 15 C13 13, 10 11, 11 10 C12 9, 14 12, 15 15 Z" fill="currentColor" />
-              <path d="M25 25 C27 27, 30 29, 29 30 C28 31, 26 28, 25 25 Z" fill="currentColor" />
-            </svg>
-            <div className="absolute w-12 h-12 rounded-full border border-red-500/20 animate-ping duration-700 pointer-events-none" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// Bird perch positions mapped to exact branch fork coordinates in the 800×380 viewBox
-const BIRD_PERCHES = [
-  { id: 1, px: 210, py: 210, endX: -320, endY: -280, delay: 0.3, duration: 3.8, flip: false },
-  { id: 2, px: 310, py: 178, endX: -200, endY: -320, delay: 0.5, duration: 4.2, flip: false },
-  { id: 3, px: 420, py: 155, endX:  180, endY: -300, delay: 0.4, duration: 3.6, flip: true  },
-  { id: 4, px: 540, py: 138, endX:  300, endY: -260, delay: 0.6, duration: 4.0, flip: true  },
-  { id: 5, px: 650, py: 128, endX:  420, endY: -240, delay: 0.2, duration: 3.5, flip: true  },
-];
-
-function BirdShape() {
+// â”€â”€â”€ Elegant wing-flapping bird SVG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function FlyingBird({
+  size = 20,
+  opacity = 1,
+  flapSpeed = 0.55,
+  gliding = false,
+}: {
+  size?: number;
+  opacity?: number;
+  flapSpeed?: number;
+  gliding?: boolean;
+}) {
   return (
     <motion.svg
-      width="22" height="14" viewBox="0 0 22 14" fill="currentColor"
-      animate={{
-        scaleY: [1, 0.35, 1],
-      }}
-      transition={{ repeat: Infinity, duration: 0.22, ease: "easeInOut" }}
+      width={size}
+      height={Math.round(size * 0.55)}
+      viewBox="0 0 28 16"
+      fill="currentColor"
+      style={{ opacity }}
+      animate={gliding ? { scaleY: 0.6 } : { scaleY: [1, 0.28, 1] }}
+      transition={
+        gliding
+          ? { duration: 0.3 }
+          : { repeat: Infinity, duration: flapSpeed, ease: [0.45, 0, 0.55, 1] }
+      }
     >
-      {/* Classic M-shape flying bird silhouette */}
-      <path d="M0 10 C3 4, 7 2, 11 7 C15 2, 19 4, 22 10 L18 8 C16 5, 13 4, 11 6 C9 4, 6 5, 4 8 Z" />
+      {/* Elegant M-silhouette */}
+      <path d="M0 12 C4 5, 9 3, 14 8 C19 3, 24 5, 28 12 L23 9 C20 6, 17 5, 14 7 C11 5, 8 6, 5 9 Z" />
     </motion.svg>
   );
 }
 
-function FlockOfBirds({ sectionWidth }: { sectionWidth: number }) {
-  // Scale perch coords from 800px reference width to actual section width
-  const scale = sectionWidth > 0 ? sectionWidth / 800 : 1;
+// â”€â”€â”€ Ambient background flock â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const AMBIENT_BIRDS = [
+  { id: 1, startPct: 108, y: "18%", duration: 18, size: 14, opacity: 0.35, flapSpeed: 0.60, delay: 0  },
+  { id: 2, startPct: 115, y: "10%", duration: 23, size: 11, opacity: 0.22, flapSpeed: 0.72, delay: 5  },
+  { id: 3, startPct: 105, y: "27%", duration: 16, size: 18, opacity: 0.42, flapSpeed: 0.50, delay: 9  },
+  { id: 4, startPct: 112, y: "8%",  duration: 26, size: 10, opacity: 0.18, flapSpeed: 0.78, delay: 14 },
+];
 
+function AmbientFlock() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-visible">
-      {BIRD_PERCHES.map((b) => {
-        const scaledX = b.px * scale;
-        const scaledY = b.py * (scale * 0.8) + 60; // vertical offset to align with branch in section
-        return (
-          <motion.div
-            key={b.id}
-            className="absolute text-neutral-700 dark:text-neutral-300"
-            style={{ left: scaledX, top: scaledY, transformOrigin: "center" }}
-            initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-            animate={{
-              x: [0, b.endX * 0.1, b.endX * 0.4, b.endX * 0.8, b.endX],
-              y: [0, b.endY * 0.2, b.endY * 0.5, b.endY * 0.8, b.endY],
-              opacity: [1, 1, 0.9, 0.5, 0],
-              scale: [1, 1.1, 0.9, 0.6, 0.3],
-            }}
-            transition={{
-              delay: b.delay,
-              duration: b.duration,
-              ease: [0.25, 0.1, 0.25, 1],
-            }}
-          >
-            <BirdShape />
-          </motion.div>
-        );
-      })}
+    <div
+      className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
+      aria-hidden="true"
+    >
+      {AMBIENT_BIRDS.map((b) => (
+        <motion.div
+          key={b.id}
+          className="absolute text-foreground/60 dark:text-neutral-400"
+          style={{ top: b.y }}
+          initial={{ x: `${b.startPct}%` }}
+          animate={{ x: [` ${b.startPct}%`, "-15%"] }}
+          transition={{
+            delay: b.delay,
+            duration: b.duration,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+        >
+          <FlyingBird size={b.size} opacity={b.opacity} flapSpeed={b.flapSpeed} />
+        </motion.div>
+      ))}
     </div>
   );
 }
 
-// Resting birds visible only during the resting stage
-function RestingFlock({ sectionWidth }: { sectionWidth: number }) {
-  const scale = sectionWidth > 0 ? sectionWidth / 800 : 1;
+// â”€â”€â”€ Compact resting bird perched on button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function RestingBird() {
   return (
-    <div className="absolute inset-0 pointer-events-none">
-      {BIRD_PERCHES.map((b) => {
-        const scaledX = b.px * scale;
-        const scaledY = b.py * (scale * 0.8) + 60;
-        return (
-          <div
-            key={b.id}
-            className="absolute text-neutral-700 dark:text-neutral-300"
-            style={{ left: scaledX, top: scaledY }}
-          >
-            {/* Resting bird — folded wings, compact teardrop silhouette */}
-            <svg width="10" height="13" viewBox="0 0 10 13" fill="currentColor">
-              <ellipse cx="5" cy="7" rx="3" ry="4.5" />
-              <circle cx="5" cy="2.5" r="2.5" />
-            </svg>
-          </div>
-        );
-      })}
-    </div>
+    <svg
+      width="18"
+      height="16"
+      viewBox="0 0 18 16"
+      fill="currentColor"
+      className="text-foreground/70 dark:text-neutral-300"
+    >
+      <ellipse cx="9" cy="10" rx="5" ry="4" />
+      <circle cx="9" cy="5.5" r="3.2" />
+      <path d="M13.5 11 C15 12, 17 13, 17 15 C15 14, 13 13, 13 12 Z" />
+      <line x1="7" y1="14" x2="6" y2="16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="11" y1="14" x2="12" y2="16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
   );
 }
 
-function Index() {
-  const featuredCerts = postsByCategory("Certification").slice(0, 6);
-  const featuredLabs = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
-  const [bugStage, setBugStage] = useState<AnimationStage>("flying");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const bugBountyRef = useRef<HTMLAnchorElement>(null);
-  const nameRef = useRef<HTMLHeadingElement>(null);
+// â”€â”€â”€ Breakaway landing bird â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+interface LandingBirdProps {
+  buttonRef: React.RefObject<HTMLAnchorElement | null>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  stage: AnimationStage;
+  onLanded: () => void;
+}
 
-  const [sectionWidth, setSectionWidth] = useState(0);
+function LandingBird({ buttonRef, containerRef, stage, onLanded }: LandingBirdProps) {
+  const [target, setTarget] = useState<{ tx: number; ty: number } | null>(null);
 
   useEffect(() => {
-    const update = () => setSectionWidth(containerRef.current?.offsetWidth ?? window.innerWidth);
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
+    let rafId: number;
+    const measure = () => {
+      if (buttonRef.current && containerRef.current) {
+        const btn = buttonRef.current.getBoundingClientRect();
+        const box = containerRef.current.getBoundingClientRect();
+        if (btn.width > 0) {
+          setTarget({
+            tx: btn.left - box.left + btn.width / 2,
+            ty: btn.top  - box.top  + btn.height / 2 - 18,
+          });
+          return;
+        }
+      }
+      rafId = requestAnimationFrame(measure);
+    };
+    measure();
+    const onResize = () => { setTarget(null); rafId = requestAnimationFrame(measure); };
+    window.addEventListener("resize", onResize);
+    return () => { cancelAnimationFrame(rafId); window.removeEventListener("resize", onResize); };
+  }, [buttonRef, containerRef]);
+
+  if (!target || stage === "ambient_flight") return null;
+
+  const sectionW = containerRef.current?.offsetWidth ?? 900;
+  const spawnX = sectionW * 0.80;
+  const spawnY = 55;
+
+  return (
+    <motion.div
+      className="absolute z-30 pointer-events-none"
+      initial={{ x: spawnX, y: spawnY, rotate: 0, opacity: 0 }}
+      animate={
+        stage === "landing"
+          ? {
+              x: [spawnX, spawnX - 100, target.tx - 9],
+              y: [spawnY, spawnY + 50, target.ty],
+              rotate: [0, 10, 0],
+              opacity: [0, 1, 1],
+            }
+          : stage === "resting"
+          ? { x: target.tx - 9, y: target.ty, rotate: 0, opacity: 1 }
+          : {}
+      }
+      transition={
+        stage === "landing"
+          ? { duration: 3.0, ease: [0.25, 0.46, 0.45, 0.94], times: [0, 0.45, 1] }
+          : {}
+      }
+      onAnimationComplete={() => { if (stage === "landing") onLanded(); }}
+    >
+      {stage === "resting" ? (
+        <RestingBird />
+      ) : (
+        <FlyingBird size={20} flapSpeed={0.42} gliding={false} />
+      )}
+    </motion.div>
+  );
+}
+
+// â”€â”€â”€ Orchestrator ties together the stage cycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+interface OrchestratorProps {
+  buttonRef: React.RefObject<HTMLAnchorElement | null>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  stage: AnimationStage;
+  setStage: (s: AnimationStage) => void;
+}
+
+function BirdOrchestrator({ buttonRef, containerRef, stage, setStage }: OrchestratorProps) {
+  useEffect(() => {
+    if (stage !== "ambient_flight") return;
+    const t = setTimeout(() => setStage("landing"), 3500);
+    return () => clearTimeout(t);
+  }, [stage, setStage]);
+
+  const handleLanded = useCallback(() => {
+    setStage("resting");
+    setTimeout(() => setStage("ambient_flight"), 4500);
+  }, [setStage]);
+
+  return (
+    <LandingBird
+      buttonRef={buttonRef}
+      containerRef={containerRef}
+      stage={stage}
+      onLanded={handleLanded}
+    />
+  );
+}
+
+// â”€â”€â”€ Elegant branch silhouette â€” sits right of centre behind name â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function BranchSilhouette() {
+  return (
+    <div
+      className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden"
+      aria-hidden="true"
+    >
+      {/* Soft horizon fade at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/30 to-transparent" />
+
+      <svg
+        viewBox="0 0 520 320"
+        fill="none"
+        className="absolute right-0 top-0 w-[55%] max-w-[560px] h-auto opacity-[0.22] dark:opacity-[0.14]"
+        preserveAspectRatio="xMaxYMin meet"
+        aria-hidden="true"
+      >
+        {/* Main bough curving right-to-left */}
+        <path
+          d="M 520 280 C 480 240, 430 210, 370 190 C 310 170, 240 160, 160 155"
+          stroke="currentColor" strokeWidth="6" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+        {/* Fork rising upper-right */}
+        <path
+          d="M 370 190 C 390 165, 415 135, 448 108 C 462 93, 476 80, 494 62"
+          stroke="currentColor" strokeWidth="4" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+        {/* Upper right twigs */}
+        <path
+          d="M 448 108 C 432 90, 420 73, 408 52 M 408 52 C 398 35, 392 20, 384 4
+             M 408 52 C 418 37, 425 25, 430 12"
+          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+        {/* Mid ascending fork */}
+        <path
+          d="M 298 168 C 283 144, 268 116, 252 90 C 242 70, 234 50, 224 26"
+          stroke="currentColor" strokeWidth="3" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+        {/* Mid twigs */}
+        <path
+          d="M 252 90 C 237 73, 225 60, 210 44 M 252 90 C 265 73, 273 56, 278 38
+             M 224 26 C 214 12, 206 2, 196 -10"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+        {/* Long extension sweeping left */}
+        <path
+          d="M 160 155 C 118 150, 78 148, 28 146"
+          stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+        {/* Small left twigs */}
+        <path
+          d="M 95 149 C 91 132, 87 114, 80 93 M 80 93 C 75 76, 70 63, 62 46"
+          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+          className="text-neutral-700 dark:text-neutral-400"
+        />
+      </svg>
+    </div>
+  );
+}
+
+// â”€â”€â”€ Index page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function Index() {
+  const featuredCerts = postsByCategory("Certification").slice(0, 6);
+  const featuredLabs  = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
+
+  const [stage, setStage]   = useState<AnimationStage>("ambient_flight");
+  const containerRef        = useRef<HTMLDivElement>(null);
+  const bugBountyRef        = useRef<HTMLAnchorElement>(null);
+  const nameRef             = useRef<HTMLHeadingElement>(null);
 
   return (
     <div>
       <section ref={containerRef} className="relative overflow-hidden">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-grid opacity-[0.12] dark:opacity-[0.22] pointer-events-none" />
-
-        {/* Glowing backdrop blur circles */}
-        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl pointer-events-none" />
+        {/* Subtle grid */}
+        <div className="absolute inset-0 bg-grid opacity-[0.10] dark:opacity-[0.18] pointer-events-none" />
+        {/* Ambient glow orbs */}
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/4 dark:bg-primary/8 blur-3xl pointer-events-none" />
         <div className="absolute bottom-[5%] right-[5%] w-[400px] h-[400px] rounded-full bg-primary/3 dark:bg-primary/5 blur-3xl pointer-events-none" />
 
-        {/* ─── HEAVY BARE-TREE SILHOUETTE ────────────────────────────────────────
-             Absolute full-width, sits at z-0 behind all content.
-             Uses solid fill paths so it reads clearly on any screen.
-        ──────────────────────────────────────────────────────────────────────── */}
-        <div
-          className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden"
-          aria-hidden="true"
-        >
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 800 380"
-            preserveAspectRatio="xMidYMid slice"
-            fill="none"
-            className="w-full h-full"
-          >
-            {/* ── Trunk & main boughs ── */}
-            <path
-              d="M 60 380 C 70 320, 90 280, 120 240 C 140 215, 160 200, 200 185
-                 M 200 185 C 240 170, 290 160, 340 148
-                 M 340 148 C 390 136, 450 130, 510 125
-                 M 510 125 C 560 120, 620 118, 700 115"
-              stroke="currentColor"
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
+        {/* Downsized serene branch background */}
+        <BranchSilhouette />
 
-            {/* ── Upper fork rising left ── */}
-            <path
-              d="M 200 185 C 180 160, 155 130, 130 100 C 115 80, 100 65, 80 45"
-              stroke="currentColor"
-              strokeWidth="5"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-            {/* Left fork twig cluster */}
-            <path
-              d="M 130 100 C 110 85, 90 80, 70 72 M 130 100 C 120 78, 125 55, 115 40
-                 M 80 45 C 60 35, 45 28, 30 18"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
+        {/* Continuous ambient flock in the sky */}
+        <AmbientFlock />
 
-            {/* ── Mid fork rising centre-left ── */}
-            <path
-              d="M 310 160 C 295 135, 280 105, 265 80 C 255 60, 245 42, 230 20"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-            {/* Mid twig cluster */}
-            <path
-              d="M 265 80 C 250 65, 240 52, 225 38 M 265 80 C 278 60, 285 45, 290 28
-                 M 230 20 C 218 8, 210 0, 200 -10"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
+        {/* Breakaway landing bird */}
+        <BirdOrchestrator
+          buttonRef={bugBountyRef}
+          containerRef={containerRef}
+          stage={stage}
+          setStage={setStage}
+        />
 
-            {/* ── Main long horizontal bough (right side) ── */}
-            <path
-              d="M 340 148 C 380 130, 420 118, 460 112
-                 M 460 112 C 500 106, 545 104, 590 102
-                 M 590 102 C 630 100, 680 102, 740 106"
-              stroke="currentColor"
-              strokeWidth="5"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-
-            {/* ── Upper twigs from right bough ── */}
-            <path
-              d="M 420 118 C 415 98, 410 78, 400 55 M 400 55 C 392 38, 388 22, 380 5
-                 M 400 55 C 410 40, 418 28, 425 15"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-            <path
-              d="M 540 104 C 538 82, 535 60, 528 38 M 528 38 C 522 20, 518 10, 510 -2
-                 M 528 38 C 538 22, 545 12, 552 0"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-            <path
-              d="M 660 102 C 658 80, 655 60, 645 40 M 645 40 C 638 22, 632 12, 622 0
-                 M 645 40 C 655 25, 662 14, 670 4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-
-            {/* ── Dropping lower twig ── */}
-            <path
-              d="M 460 112 C 468 130, 472 150, 480 168 M 480 168 C 486 182, 492 195, 498 210"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              className="text-neutral-400 dark:text-neutral-600"
-            />
-          </svg>
-
-          {/* Birds & mosquito resting on branch (visible only when resting) */}
-          {bugStage === "resting" && sectionWidth > 0 && (
-            <RestingFlock sectionWidth={sectionWidth} />
-          )}
-
-          {/* Flock takeoff animation (visible only when flying) */}
-          {bugStage === "flying" && sectionWidth > 0 && (
-            <FlockOfBirds sectionWidth={sectionWidth} />
-          )}
-        </div>
-
-        <BugHunt buttonRef={bugBountyRef} containerRef={containerRef} nameRef={nameRef} setBugStage={setBugStage} />
-
-        <div className="container-prose relative pt-28 pb-24 md:pt-40 md:pb-32 text-center">
+        <div className="container-prose relative z-10 pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 dark:bg-secondary/30 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm z-10 relative">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 dark:bg-secondary/30 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Available for engagements
             </div>
           </Reveal>
-          <Reveal delay={0.05} className="relative z-10">
-            <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block">
+          <Reveal delay={0.05}>
+            <h1
+              ref={nameRef}
+              className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block"
+            >
               Omar Khalid.
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-muted-foreground relative z-10">
+            <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-muted-foreground">
               Offensive Security Engineer.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
-            <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed relative z-10">
+            <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed">
               I break systems to make them stronger. A complete portfolio of certifications,
-              labs, CTFs and research — every writeup, fully published here.
+              labs, CTFs and research â€” every writeup, fully published here.
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <div className="mt-10 flex flex-wrap gap-3 justify-center relative z-10">
+            <div className="mt-10 flex flex-wrap gap-3 justify-center">
               <Link
                 to="/writeups"
                 className="group inline-flex items-center gap-1.5 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90 shadow-sm"
               >
                 Read writeups <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </Link>
+              {/* Bug Bounty button â€” soft natural glow when bird is resting on it */}
               <Link
                 ref={bugBountyRef}
                 to="/writeups"
                 search={{ category: "Bug Bounty" } as any}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-6 py-3 text-sm font-medium transition-all shadow-sm duration-300 relative z-10 ${
-                  bugStage === "smashed"
-                    ? "border-red-600/50 bg-red-600/10 text-red-600 dark:text-red-400 scale-95 shadow-md shadow-red-500/20"
+                className={`relative inline-flex items-center gap-1.5 rounded-full border px-6 py-3 text-sm font-medium transition-all duration-500 shadow-sm ${
+                  stage === "resting"
+                    ? "border-border/70 bg-background/70 text-foreground"
                     : "border-border bg-background/50 dark:bg-background/20 backdrop-blur-md text-foreground hover:bg-secondary"
                 }`}
               >
-                {bugStage === "smashed" && (
-                  <span className="h-2 w-2 rounded-full bg-red-600 dark:bg-red-500 animate-pulse drop-shadow-[0_0_4px_rgba(220,38,38,0.7)]" />
-                )}
+                {/* Perched bird appears above button text, animates in/out */}
+                <AnimatePresence>
+                  {stage === "resting" && (
+                    <motion.span
+                      key="perched-icon"
+                      className="absolute -top-[22px] left-1/2 -translate-x-1/2"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                    >
+                      <RestingBird />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
                 Bug bounty reports
               </Link>
               <a
@@ -535,6 +387,7 @@ function Index() {
           </Reveal>
         </div>
       </section>
+
 
       <section className="border-y border-border relative bg-secondary/20 dark:bg-secondary/5">
         <div className="container-prose py-14">
@@ -587,28 +440,28 @@ function Index() {
             {[
               {
                 title: "Google Developer Student Clubs (GDSC)",
-                category: "Community • 2024",
+                category: "Community â€¢ 2024",
                 image: "/images/events/gdsc.jpeg",
                 desc: "Led workshops, guided student developers, and grew our local Google developer community.",
                 position: "object-cover object-[center_18%] scale-[1.1]"
               },
               {
-                title: "1st Place — AJA CTF Competition",
-                category: "Championship • 2025",
+                title: "1st Place â€” AJA CTF Competition",
+                category: "Championship â€¢ 2025",
                 image: "/images/events/aja-ctf.jpeg",
                 desc: "Led our core team to achieve the absolute 1st place in the AJA Capture The Flag competition.",
                 position: "object-cover object-[center_60%]"
               },
               {
                 title: "Blackhat CTF Finalist",
-                category: "Tournament • 2024 - 2025",
+                category: "Tournament â€¢ 2024 - 2025",
                 image: "/images/events/blackhat-2025.jpeg",
                 desc: "Qualified for the final round at Blackhat CTF, competing with an elite team.",
                 position: "object-cover object-[center_25%]"
               },
               {
                 title: "LEAP 2025 Showcase",
-                category: "Summit • March 2025",
+                category: "Summit â€¢ March 2025",
                 image: "/images/events/leap-2025-2.jpeg",
                 desc: "Participated in the massive LEAP 2025 tech summit in Riyadh with teammates.",
                 position: "object-cover object-[center_35%]"
