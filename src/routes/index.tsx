@@ -93,6 +93,7 @@ function AmbientFlock() {
 // ——— Index page ——————————————————————————————————————————————————————————————
 function Index() {
   const featuredCerts = postsByCategory("Certification").slice(0, 6);
+  const featuredLabs  = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
   const containerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
 
