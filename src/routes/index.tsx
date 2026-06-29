@@ -19,41 +19,60 @@ export const Route = createFileRoute("/")({
 });
 
 const LAB_CATS = ["Mobile", "Reverse Engineering", "Malware", "DFIR", "Memory"];
+type AnimationStage = 'resting' | 'flying' | 'smashed';
 
 interface BugHuntProps {
   buttonRef: React.RefObject<HTMLAnchorElement | null>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   nameRef: React.RefObject<HTMLHeadingElement | null>;
-  setBugStage: (stage: "flying" | "landed" | "smashed" | "dead") => void;
+  setBugStage: (stage: AnimationStage) => void;
 }
 
 function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps) {
   const [coords, setCoords] = useState<{ x: number; y: number; spawnX: number; spawnY: number } | null>(null);
-  const [stage, setStage] = useState<"flying" | "landed" | "smashed" | "dead">("flying");
-
-  const measureCoords = () => {
-    if (buttonRef.current && containerRef.current && nameRef.current) {
-      const btnRect = buttonRef.current.getBoundingClientRect();
-      const nameRect = nameRef.current.getBoundingClientRect();
-      const containerRect = containerRef.current.getBoundingClientRect();
-      setCoords({
-        x: btnRect.left - containerRect.left + btnRect.width / 2,
-        y: btnRect.top - containerRect.top + btnRect.height / 2,
-        spawnX: nameRect.right - containerRect.left + 50,
-        spawnY: nameRect.top - containerRect.top - 20,
-      });
-    }
-  };
+  const [stage, setStage] = useState<AnimationStage>('flying');
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      measureCoords();
-    }, 1000);
+    let animationFrameId: number;
+    const checkAndMeasure = () => {
+      if (buttonRef.current && containerRef.current && nameRef.current) {
+        const btnRect = buttonRef.current.getBoundingClientRect();
+        const nameRect = nameRef.current.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
+        // Calculate coords relative to the container
+        if (btnRect.width > 0 && nameRect.width > 0) {
+          setCoords({
+            x: btnRect.left - containerRect.left + btnRect.width / 2,
+            y: btnRect.top - containerRect.top + btnRect.height / 2,
+            spawnX: nameRect.right - containerRect.left + 50,
+            spawnY: nameRect.top - containerRect.top - 20,
+          });
+          return; // Stop checking
+        }
+      }
+      animationFrameId = requestAnimationFrame(checkAndMeasure);
+    };
 
-    window.addEventListener("resize", measureCoords);
+    checkAndMeasure();
+
+    const handleResize = () => {
+      if (buttonRef.current && containerRef.current && nameRef.current) {
+        const btnRect = buttonRef.current.getBoundingClientRect();
+        const nameRect = nameRef.current.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
+        setCoords({
+          x: btnRect.left - containerRect.left + btnRect.width / 2,
+          y: btnRect.top - containerRect.top + btnRect.height / 2,
+          spawnX: nameRect.right - containerRect.left + 50,
+          spawnY: nameRect.top - containerRect.top - 20,
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", measureCoords);
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -66,7 +85,7 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
       <AnimatePresence>
-        {stage !== "dead" && (
+        {stage !== "smashed" && (
           <motion.div
             className="absolute"
             style={{ x: 0, y: 0, originX: 0.5, originY: 0.5 }}
@@ -91,21 +110,14 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                     rotate: [45, 90, -45, 120, 0],
                     opacity: [0, 1, 1, 1, 1],
                   }
-                : stage === "landed"
+                : stage === "resting"
                 ? {
-                    x: coords.x,
-                    y: coords.y,
-                    rotate: 0,
-                    opacity: 1,
+                    x: coords.spawnX,
+                    y: coords.spawnY,
+                    opacity: 0,
                     scale: 1,
                   }
-                : {
-                    x: coords.x,
-                    y: coords.y,
-                    rotate: 180,
-                    scale: 0.1,
-                    opacity: 0,
-                  }
+                : {}
             }
             transition={
               stage === "flying"
@@ -114,21 +126,15 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                     ease: "easeInOut",
                     times: [0, 0.25, 0.5, 0.75, 1],
                   }
-                : stage === "smashed"
-                ? {
-                    duration: 0.4,
-                    ease: "easeOut",
-                  }
                 : {}
             }
             onAnimationComplete={() => {
               if (stage === "flying") {
-                setStage("landed");
-                setTimeout(() => setStage("smashed"), 1200);
-              } else if (stage === "smashed") {
-                setStage("dead");
+                // Mosquito landed, smash it instantly
+                setStage("smashed");
                 setTimeout(() => {
-                  setStage("flying");
+                  setStage("resting");
+                  setTimeout(() => setStage("flying"), 100);
                 }, 4500);
               }
             }}
@@ -138,28 +144,34 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
                 animate={
                   stage === "flying"
                     ? { rotate: [-10, 10, -10], scale: [1, 1.1, 1] }
-                    : stage === "landed"
-                    ? { y: [0, -1.5, 0] }
-                    : { scale: 0.2 }
+                    : { scale: 0.2, opacity: 0 }
                 }
                 transition={{
-                  repeat: Infinity,
-                  duration: stage === "flying" ? 0.08 : 0.4,
+                  repeat: stage === "flying" ? Infinity : 0,
+                  duration: 0.08,
                   ease: "easeInOut",
                 }}
                 className={`flex items-center justify-center p-1.5 transition-colors duration-300`}
               >
+                {/* Custom Mosquito SVG Sprite */}
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-foreground/80 dark:text-muted-foreground/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
+                  {/* Proboscis */}
                   <line x1="16" y1="8" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" />
                   
+                  {/* Legs */}
                   <path d="M12 14 C10 16, 9 20, 11 22" stroke="currentColor" strokeWidth="1" />
                   <path d="M20 14 C22 16, 23 20, 21 22" stroke="currentColor" strokeWidth="1" />
                   <path d="M11 16 C9 18, 9 22, 10 24" stroke="currentColor" strokeWidth="0.8" />
                   <path d="M21 16 C23 18, 23 22, 22 24" stroke="currentColor" strokeWidth="0.8" />
+                  <path d="M14 12 C10 10, 8 12, 6 14" stroke="currentColor" strokeWidth="0.8" />
+                  <path d="M18 12 C22 10, 24 12, 26 14" stroke="currentColor" strokeWidth="0.8" />
                   
+                  {/* Thorax */}
                   <ellipse cx="16" cy="13" rx="2" ry="4" fill="currentColor" />
+                  {/* Abdomen */}
                   <path d="M16 17 L16 26" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                   
+                  {/* Wings */}
                   <motion.path
                     d="M15 12 C10 8, 4 9, 6 15 C8 19, 12 16, 15 13"
                     fill="currentColor"
@@ -189,7 +201,7 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
 
       {/* Blood Splat Overlay on smash */}
       <AnimatePresence>
-        {(stage === "smashed" || stage === "dead") && (
+        {stage === "smashed" && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 0.85 }}
@@ -242,8 +254,8 @@ function FlockOfBirds() {
             key={b.id}
             className="absolute text-muted-foreground/60 dark:text-muted-foreground/45"
             style={{ 
-              left: b.startX, 
-              top: b.startY,
+              left: `${b.startX}px`, 
+              top: `${b.startY}px`,
               transformOrigin: "center" 
             }}
             initial={{ x: 0, y: 0, opacity: 1, scale: 0.5, rotate: b.angle }}
@@ -287,7 +299,7 @@ function FlockOfBirds() {
 function Index() {
   const featuredCerts = postsByCategory("Certification").slice(0, 6);
   const featuredLabs = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
-  const [bugStage, setBugStage] = useState<"flying" | "landed" | "smashed" | "dead">("flying");
+  const [bugStage, setBugStage] = useState<AnimationStage>("flying");
   const containerRef = useRef<HTMLDivElement>(null);
   const bugBountyRef = useRef<HTMLAnchorElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
@@ -306,15 +318,27 @@ function Index() {
 
         <div className="container-prose relative pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 dark:bg-secondary/30 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 dark:bg-secondary/30 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm z-10 relative">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Available for engagements
             </div>
           </Reveal>
           <Reveal delay={0.05} className="relative">
-            {/* Silhouette Branch with Resting Mosquitoes */}
-            <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none opacity-25 dark:opacity-15 select-none overflow-visible">
+            {/* Background Watermark & Branch Container (z-0) */}
+            <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-25 dark:opacity-15 select-none overflow-visible">
               <div className="relative w-full max-w-[600px] h-[200px] overflow-visible">
+                {/* Cyber-forensics blueprint elements combined with bare tree branch */}
                 <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full h-full text-muted-foreground/60 dark:text-muted-foreground/40 overflow-visible">
+                  {/* Concentric Circles & Crosshairs (Cyber Forensics Element) */}
+                  <circle cx="300" cy="100" r="150" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 6" opacity="0.4" />
+                  <circle cx="300" cy="100" r="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 4" opacity="0.5" />
+                  <circle cx="300" cy="100" r="50" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+                  <line x1="300" y1="0" x2="300" y2="200" stroke="currentColor" strokeWidth="0.5" strokeDasharray="10 10" opacity="0.3" />
+                  <line x1="100" y1="100" x2="500" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="10 10" opacity="0.3" />
+                  
+                  {/* Target Crosshairs */}
+                  <path d="M150 100 L140 100 M450 100 L460 100 M300 250 L300 260 M300 -50 L300 -60" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
+                  
+                  {/* The Bare Branch Silhouette */}
                   <path 
                     d="M50 120 C 150 110, 220 90, 320 80 C 400 72, 480 85, 550 95 M 280 85 C 310 65, 340 50, 390 40 M 350 78 C 380 95, 420 110, 460 120 M 470 82 C 490 60, 520 50, 540 45" 
                     stroke="currentColor" 
@@ -327,15 +351,6 @@ function Index() {
                     strokeWidth="1.5" 
                     strokeLinecap="round" 
                   />
-                  
-                  {/* One resting mosquito silhouette that stays on the branch */}
-                  <g transform="translate(140, 102) rotate(-15) scale(0.5)" className="opacity-60 text-muted-foreground">
-                    <line x1="8" y1="4" x2="8" y2="0" stroke="currentColor" strokeWidth="1.5" />
-                    <ellipse cx="8" cy="7" rx="1.5" ry="3" fill="currentColor" />
-                    <line x1="8" y1="9" x2="8" y2="14" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M7 6 C4 4, 1 5, 2 8 C3 10, 5 9, 7 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                    <path d="M9 6 C12 4, 15 5, 14 8 C13 10, 11 9, 9 7" fill="currentColor" fillOpacity="0.4" stroke="currentColor" />
-                  </g>
                 </svg>
                 
                 {/* Looping Flock of Birds */}
@@ -343,23 +358,23 @@ function Index() {
               </div>
             </div>
             
-            <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block">
+            <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block relative z-10">
               Omar Khalid.
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-muted-foreground">
+            <p className="mt-6 text-2xl md:text-3xl font-medium tracking-tight text-muted-foreground relative z-10">
               Offensive Security Engineer.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
-            <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed">
+            <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed relative z-10">
               I break systems to make them stronger. A complete portfolio of certifications,
               labs, CTFs and research — every writeup, fully published here.
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <div className="mt-10 flex flex-wrap gap-3 justify-center">
+            <div className="mt-10 flex flex-wrap gap-3 justify-center relative z-10">
               <Link
                 to="/writeups"
                 className="group inline-flex items-center gap-1.5 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition hover:opacity-90 shadow-sm"
@@ -370,16 +385,14 @@ function Index() {
                 ref={bugBountyRef}
                 to="/writeups"
                 search={{ category: "Bug Bounty" } as any}
-                className={`inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium transition-all shadow-sm duration-300 ${
+                className={`inline-flex items-center gap-1.5 rounded-full border px-6 py-3 text-sm font-medium transition-all shadow-sm duration-300 relative z-10 ${
                   bugStage === "smashed"
-                    ? "border-red-600 bg-red-600/10 text-red-600 scale-95 shadow-red-600/20"
-                    : bugStage === "dead"
-                    ? "border-red-600/40 bg-red-500/5 text-red-600 dark:text-red-400 shadow-md shadow-red-500/10 scale-100"
+                    ? "border-red-600/50 bg-red-600/10 text-red-600 dark:text-red-400 scale-95 shadow-md shadow-red-500/20"
                     : "border-border bg-background/50 dark:bg-background/20 backdrop-blur-md text-foreground hover:bg-secondary"
                 }`}
               >
-                {bugStage === "dead" && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-600 dark:bg-red-500 animate-pulse shadow-sm shadow-red-600" />
+                {bugStage === "smashed" && (
+                  <span className="h-2 w-2 rounded-full bg-red-600 dark:bg-red-500 animate-pulse drop-shadow-[0_0_4px_rgba(220,38,38,0.7)]" />
                 )}
                 Bug bounty reports
               </Link>
