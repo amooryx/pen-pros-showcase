@@ -1,11 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Stagger, StaggerItem } from "@/components/reveal";
-import { posts, ALL_CATEGORIES } from "@/data/posts";
-import { useState, useEffect } from "react";
+import { posts } from "@/data/posts";
+
+interface WriteupsSearch {
+  category?: string;
+}
 
 export const Route = createFileRoute("/writeups")({
+  validateSearch: (search: Record<string, unknown>): WriteupsSearch => {
+    return {
+      category: search.category ? String(search.category) : undefined,
+    };
+  },
   head: () => ({
     meta: [
       { title: "Writeups — Omar Khalid" },
@@ -18,26 +26,23 @@ export const Route = createFileRoute("/writeups")({
 });
 
 function WriteupsPage() {
-  const [active, setActive] = useState<string>("All");
+  const { category } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const displayPosts = posts.filter((p) => p.category !== "Certification");
   const categories = Array.from(new Set(displayPosts.map((p) => p.category))).sort();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const cat = params.get("category");
-      if (cat) {
-        // Find match in categories ignoring case or exact match
-        const found = ["All", ...categories].find(c => c.toLowerCase() === cat.toLowerCase());
-        if (found) {
-          setActive(found);
-        }
-      }
-    }
-  }, [categories]);
+  const active = category || "All";
 
-  const filtered = active === "All" ? displayPosts : displayPosts.filter((p) => p.category === active);
+  const handleCategoryChange = (c: string) => {
+    navigate({
+      search: () => ({
+        category: c === "All" ? undefined : c,
+      }),
+    });
+  };
+
+  const filtered = active === "All" ? displayPosts : displayPosts.filter((p) => p.category.toLowerCase() === active.toLowerCase());
 
   return (
     <div>
@@ -51,9 +56,9 @@ function WriteupsPage() {
           {["All", ...categories].map((c) => (
             <button
               key={c}
-              onClick={() => setActive(c)}
+              onClick={() => handleCategoryChange(c)}
               className={`text-sm px-4 py-1.5 rounded-full transition cursor-pointer ${
-                active === c
+                active.toLowerCase() === c.toLowerCase()
                   ? "bg-foreground text-background"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}

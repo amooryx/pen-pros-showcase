@@ -90,135 +90,11 @@ function AmbientFlock() {
   );
 }
 
-// â”€â”€â”€ Compact resting bird perched on button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function RestingBird() {
-  return (
-    <svg
-      width="18"
-      height="16"
-      viewBox="0 0 18 16"
-      fill="currentColor"
-      className="text-foreground/70 dark:text-neutral-300"
-    >
-      <ellipse cx="9" cy="10" rx="5" ry="4" />
-      <circle cx="9" cy="5.5" r="3.2" />
-      <path d="M13.5 11 C15 12, 17 13, 17 15 C15 14, 13 13, 13 12 Z" />
-      <line x1="7" y1="14" x2="6" y2="16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="11" y1="14" x2="12" y2="16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-// â”€â”€â”€ Breakaway landing bird â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-interface LandingBirdProps {
-  buttonRef: React.RefObject<HTMLAnchorElement | null>;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  stage: AnimationStage;
-  onLanded: () => void;
-}
-
-function LandingBird({ buttonRef, containerRef, stage, onLanded }: LandingBirdProps) {
-  const [target, setTarget] = useState<{ tx: number; ty: number } | null>(null);
-
-  useEffect(() => {
-    let rafId: number;
-    const measure = () => {
-      if (buttonRef.current && containerRef.current) {
-        const btn = buttonRef.current.getBoundingClientRect();
-        const box = containerRef.current.getBoundingClientRect();
-        if (btn.width > 0) {
-          setTarget({
-            tx: btn.left - box.left + btn.width / 2,
-            ty: btn.top  - box.top  + btn.height / 2 - 18,
-          });
-          return;
-        }
-      }
-      rafId = requestAnimationFrame(measure);
-    };
-    measure();
-    const onResize = () => { setTarget(null); rafId = requestAnimationFrame(measure); };
-    window.addEventListener("resize", onResize);
-    return () => { cancelAnimationFrame(rafId); window.removeEventListener("resize", onResize); };
-  }, [buttonRef, containerRef]);
-
-  if (!target || stage === "ambient_flight") return null;
-
-  const sectionW = containerRef.current?.offsetWidth ?? 900;
-  const spawnX = sectionW * 0.80;
-  const spawnY = 55;
-
-  return (
-    <motion.div
-      className="absolute z-30 pointer-events-none"
-      initial={{ x: spawnX, y: spawnY, rotate: 0, opacity: 0 }}
-      animate={
-        stage === "landing"
-          ? {
-              x: [spawnX, spawnX - 100, target.tx - 9],
-              y: [spawnY, spawnY + 50, target.ty],
-              rotate: [0, 10, 0],
-              opacity: [0, 1, 1],
-            }
-          : stage === "resting"
-          ? { x: target.tx - 9, y: target.ty, rotate: 0, opacity: 1 }
-          : {}
-      }
-      transition={
-        stage === "landing"
-          ? { duration: 3.0, ease: [0.25, 0.46, 0.45, 0.94], times: [0, 0.45, 1] }
-          : {}
-      }
-      onAnimationComplete={() => { if (stage === "landing") onLanded(); }}
-    >
-      {stage === "resting" ? (
-        <RestingBird />
-      ) : (
-        <FlyingBird size={20} flapSpeed={0.42} gliding={false} />
-      )}
-    </motion.div>
-  );
-}
-
-// â”€â”€â”€ Orchestrator ties together the stage cycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-interface OrchestratorProps {
-  buttonRef: React.RefObject<HTMLAnchorElement | null>;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  stage: AnimationStage;
-  setStage: (s: AnimationStage) => void;
-}
-
-function BirdOrchestrator({ buttonRef, containerRef, stage, setStage }: OrchestratorProps) {
-  useEffect(() => {
-    if (stage !== "ambient_flight") return;
-    const t = setTimeout(() => setStage("landing"), 3500);
-    return () => clearTimeout(t);
-  }, [stage, setStage]);
-
-  const handleLanded = useCallback(() => {
-    setStage("resting");
-    setTimeout(() => setStage("ambient_flight"), 4500);
-  }, [setStage]);
-
-  return (
-    <LandingBird
-      buttonRef={buttonRef}
-      containerRef={containerRef}
-      stage={stage}
-      onLanded={handleLanded}
-    />
-  );
-}
-
-// â”€â”€â”€ Index page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ——— Index page ——————————————————————————————————————————————————————————————
 function Index() {
   const featuredCerts = postsByCategory("Certification").slice(0, 6);
-  const featuredLabs  = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
-
-  const [stage, setStage]   = useState<AnimationStage>("ambient_flight");
-  const containerRef        = useRef<HTMLDivElement>(null);
-  const bugBountyRef        = useRef<HTMLAnchorElement>(null);
-  const nameRef             = useRef<HTMLHeadingElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLHeadingElement>(null);
 
   return (
     <div>
@@ -229,19 +105,8 @@ function Index() {
         <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/4 dark:bg-primary/8 blur-3xl pointer-events-none" />
         <div className="absolute bottom-[5%] right-[5%] w-[400px] h-[400px] rounded-full bg-primary/3 dark:bg-primary/5 blur-3xl pointer-events-none" />
 
-        {/* Downsized serene branch background */}
-        <BranchSilhouette />
-
         {/* Continuous ambient flock in the sky */}
         <AmbientFlock />
-
-        {/* Breakaway landing bird */}
-        <BirdOrchestrator
-          buttonRef={bugBountyRef}
-          containerRef={containerRef}
-          stage={stage}
-          setStage={setStage}
-        />
 
         <div className="container-prose relative z-10 pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
@@ -264,8 +129,7 @@ function Index() {
           </Reveal>
           <Reveal delay={0.15}>
             <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-              I break systems to make them stronger. A complete portfolio of certifications,
-              labs, CTFs and research â€” every writeup, fully published here.
+              I break systems to make them stronger. A complete portfolio of certifications, labs, CTFs and research — every writeup, fully published here.
             </p>
           </Reveal>
           <Reveal delay={0.2}>
@@ -276,32 +140,11 @@ function Index() {
               >
                 Read writeups <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </Link>
-              {/* Bug Bounty button â€” soft natural glow when bird is resting on it */}
               <Link
-                ref={bugBountyRef}
                 to="/writeups"
                 search={{ category: "Bug Bounty" } as any}
-                className={`relative inline-flex items-center gap-1.5 rounded-full border px-6 py-3 text-sm font-medium transition-all duration-500 shadow-sm ${
-                  stage === "resting"
-                    ? "border-border/70 bg-background/70 text-foreground"
-                    : "border-border bg-background/50 dark:bg-background/20 backdrop-blur-md text-foreground hover:bg-secondary"
-                }`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 dark:bg-background/20 backdrop-blur-md px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition shadow-sm"
               >
-                {/* Perched bird appears above button text, animates in/out */}
-                <AnimatePresence>
-                  {stage === "resting" && (
-                    <motion.span
-                      key="perched-icon"
-                      className="absolute -top-[22px] left-1/2 -translate-x-1/2"
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.45, ease: "easeOut" }}
-                    >
-                      <RestingBird />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
                 Bug bounty reports
               </Link>
               <a
