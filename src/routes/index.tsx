@@ -66,26 +66,26 @@ function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
           <motion.div
             className="absolute"
             style={{ x: 0, y: 0, originX: 0.5, originY: 0.5 }}
-            initial={{ x: -100, y: 150, opacity: 0, rotate: 45 }}
+            initial={{ x: coords.x + 150, y: -200, opacity: 0, rotate: 180 }}
             animate={
               stage === "flying"
                 ? {
                     x: [
-                      -50, 
-                      coords.x - 250, 
-                      coords.x + 200, 
-                      coords.x - 120, 
+                      coords.x + 150, 
+                      coords.x - 200, 
+                      coords.x + 100, 
+                      coords.x - 80, 
                       coords.x
                     ],
                     y: [
-                      100, 
-                      coords.y - 150, 
-                      coords.y - 60, 
-                      coords.y + 120, 
+                      -200, 
+                      coords.y - 120, 
+                      coords.y - 80, 
+                      coords.y + 40, 
                       coords.y
                     ],
-                    rotate: [45, 90, -45, 120, 0],
-                    opacity: 1,
+                    rotate: [180, 220, 140, 260, 0],
+                    opacity: [0, 1, 1, 1, 1],
                   }
                 : stage === "landed" || stage === "targeted"
                 ? {
@@ -121,6 +121,10 @@ function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
                 setTimeout(() => setStage("targeted"), 1000);
               } else if (stage === "shot") {
                 setStage("dead");
+                // Wait 4 seconds (clean patched state), then restart the loop!
+                setTimeout(() => {
+                  setStage("flying");
+                }, 4000);
               }
             }}
           >
