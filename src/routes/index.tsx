@@ -236,60 +236,85 @@ function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps
   );
 }
 
-function FlockOfBirds() {
-  const birds = [
-    { id: 1, startX: 180, startY: 74, endX: -250, endY: -150, delay: 0.8, duration: 4.5, angle: -10 },
-    { id: 2, startX: 280, startY: 75, endX: -180, endY: -180, delay: 1.0, duration: 4.0, angle: 15 },
-    { id: 3, startX: 350, startY: 65, endX: 250, endY: -160, delay: 0.9, duration: 4.8, angle: -5 },
-    { id: 4, startX: 470, startY: 72, endX: 400, endY: -140, delay: 1.1, duration: 4.2, angle: -20 },
-    { id: 5, startX: 520, startY: 82, endX: 150, endY: -220, delay: 1.05, duration: 5.0, angle: 25 },
-  ];
+// Bird perch positions mapped to exact branch fork coordinates in the 800×380 viewBox
+const BIRD_PERCHES = [
+  { id: 1, px: 210, py: 210, endX: -320, endY: -280, delay: 0.3, duration: 3.8, flip: false },
+  { id: 2, px: 310, py: 178, endX: -200, endY: -320, delay: 0.5, duration: 4.2, flip: false },
+  { id: 3, px: 420, py: 155, endX:  180, endY: -300, delay: 0.4, duration: 3.6, flip: true  },
+  { id: 4, px: 540, py: 138, endX:  300, endY: -260, delay: 0.6, duration: 4.0, flip: true  },
+  { id: 5, px: 650, py: 128, endX:  420, endY: -240, delay: 0.2, duration: 3.5, flip: true  },
+];
+
+function BirdShape() {
+  return (
+    <motion.svg
+      width="22" height="14" viewBox="0 0 22 14" fill="currentColor"
+      animate={{
+        scaleY: [1, 0.35, 1],
+      }}
+      transition={{ repeat: Infinity, duration: 0.22, ease: "easeInOut" }}
+    >
+      {/* Classic M-shape flying bird silhouette */}
+      <path d="M0 10 C3 4, 7 2, 11 7 C15 2, 19 4, 22 10 L18 8 C16 5, 13 4, 11 6 C9 4, 6 5, 4 8 Z" />
+    </motion.svg>
+  );
+}
+
+function FlockOfBirds({ sectionWidth }: { sectionWidth: number }) {
+  // Scale perch coords from 800px reference width to actual section width
+  const scale = sectionWidth > 0 ? sectionWidth / 800 : 1;
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-visible">
-      {birds.map((b) => {
-        const isLeft = b.endX < 0;
+      {BIRD_PERCHES.map((b) => {
+        const scaledX = b.px * scale;
+        const scaledY = b.py * (scale * 0.8) + 60; // vertical offset to align with branch in section
         return (
           <motion.div
             key={b.id}
-            className="absolute text-muted-foreground/60 dark:text-muted-foreground/45"
-            style={{ 
-              left: `${b.startX}px`, 
-              top: `${b.startY}px`,
-              transformOrigin: "center" 
-            }}
-            initial={{ x: 0, y: 0, opacity: 1, scale: 0.5, rotate: b.angle }}
+            className="absolute text-neutral-700 dark:text-neutral-300"
+            style={{ left: scaledX, top: scaledY, transformOrigin: "center" }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
             animate={{
-              x: [0, 0, b.endX * 0.3, b.endX * 0.6, b.endX],
-              y: [0, 0, b.endY * 0.4, b.endY * 0.8, b.endY],
-              opacity: [1, 1, 1, 0.7, 0],
-              scale: [0.5, 0.5, 0.6, 0.4, 0.2],
-              rotate: [b.angle, b.angle, isLeft ? -30 : 30, isLeft ? -45 : 45, isLeft ? -60 : 60],
+              x: [0, b.endX * 0.1, b.endX * 0.4, b.endX * 0.8, b.endX],
+              y: [0, b.endY * 0.2, b.endY * 0.5, b.endY * 0.8, b.endY],
+              opacity: [1, 1, 0.9, 0.5, 0],
+              scale: [1, 1.1, 0.9, 0.6, 0.3],
             }}
             transition={{
+              delay: b.delay,
               duration: b.duration,
-              times: [0, b.delay / b.duration, (b.delay + 0.3) / b.duration, (b.delay + 1.5) / b.duration, 1],
-              ease: "easeInOut",
+              ease: [0.25, 0.1, 0.25, 1],
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="overflow-visible">
-              <motion.path
-                d="M2 14 C6 8, 9 8, 12 12 C15 8, 18 8, 22 14 C18 11, 15 11, 12 13 C9 11, 6 11, 2 14 Z"
-                animate={{
-                  d: [
-                    "M2 14 C6 8, 9 8, 12 12 C15 8, 18 8, 22 14 C18 11, 15 11, 12 13 C9 11, 6 11, 2 14 Z",
-                    "M2 10 C6 13, 9 13, 12 11 C15 13, 18 13, 22 10 C18 11, 15 11, 12 12 C9 11, 6 11, 2 10 Z",
-                    "M2 14 C6 8, 9 8, 12 12 C15 8, 18 8, 22 14 C18 11, 15 11, 12 13 C9 11, 6 11, 2 14 Z"
-                  ]
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 0.25,
-                  ease: "easeInOut"
-                }}
-              />
-            </svg>
+            <BirdShape />
           </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+// Resting birds visible only during the resting stage
+function RestingFlock({ sectionWidth }: { sectionWidth: number }) {
+  const scale = sectionWidth > 0 ? sectionWidth / 800 : 1;
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {BIRD_PERCHES.map((b) => {
+        const scaledX = b.px * scale;
+        const scaledY = b.py * (scale * 0.8) + 60;
+        return (
+          <div
+            key={b.id}
+            className="absolute text-neutral-700 dark:text-neutral-300"
+            style={{ left: scaledX, top: scaledY }}
+          >
+            {/* Resting bird — folded wings, compact teardrop silhouette */}
+            <svg width="10" height="13" viewBox="0 0 10 13" fill="currentColor">
+              <ellipse cx="5" cy="7" rx="3" ry="4.5" />
+              <circle cx="5" cy="2.5" r="2.5" />
+            </svg>
+          </div>
         );
       })}
     </div>
@@ -304,15 +329,147 @@ function Index() {
   const bugBountyRef = useRef<HTMLAnchorElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
 
+  const [sectionWidth, setSectionWidth] = useState(0);
+
+  useEffect(() => {
+    const update = () => setSectionWidth(containerRef.current?.offsetWidth ?? window.innerWidth);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   return (
     <div>
       <section ref={containerRef} className="relative overflow-hidden">
-        {/* Apple-style subtle grid background */}
+        {/* Subtle grid background */}
         <div className="absolute inset-0 bg-grid opacity-[0.12] dark:opacity-[0.22] pointer-events-none" />
-        
-        {/* Glowing backdrop blur circles for premium tech aesthetic */}
+
+        {/* Glowing backdrop blur circles */}
         <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-[5%] right-[5%] w-[400px] h-[400px] rounded-full bg-primary/3 dark:bg-primary/5 blur-3xl pointer-events-none" />
+
+        {/* ─── HEAVY BARE-TREE SILHOUETTE ────────────────────────────────────────
+             Absolute full-width, sits at z-0 behind all content.
+             Uses solid fill paths so it reads clearly on any screen.
+        ──────────────────────────────────────────────────────────────────────── */}
+        <div
+          className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden"
+          aria-hidden="true"
+        >
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 800 380"
+            preserveAspectRatio="xMidYMid slice"
+            fill="none"
+            className="w-full h-full"
+          >
+            {/* ── Trunk & main boughs ── */}
+            <path
+              d="M 60 380 C 70 320, 90 280, 120 240 C 140 215, 160 200, 200 185
+                 M 200 185 C 240 170, 290 160, 340 148
+                 M 340 148 C 390 136, 450 130, 510 125
+                 M 510 125 C 560 120, 620 118, 700 115"
+              stroke="currentColor"
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+
+            {/* ── Upper fork rising left ── */}
+            <path
+              d="M 200 185 C 180 160, 155 130, 130 100 C 115 80, 100 65, 80 45"
+              stroke="currentColor"
+              strokeWidth="5"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+            {/* Left fork twig cluster */}
+            <path
+              d="M 130 100 C 110 85, 90 80, 70 72 M 130 100 C 120 78, 125 55, 115 40
+                 M 80 45 C 60 35, 45 28, 30 18"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+
+            {/* ── Mid fork rising centre-left ── */}
+            <path
+              d="M 310 160 C 295 135, 280 105, 265 80 C 255 60, 245 42, 230 20"
+              stroke="currentColor"
+              strokeWidth="4"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+            {/* Mid twig cluster */}
+            <path
+              d="M 265 80 C 250 65, 240 52, 225 38 M 265 80 C 278 60, 285 45, 290 28
+                 M 230 20 C 218 8, 210 0, 200 -10"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+
+            {/* ── Main long horizontal bough (right side) ── */}
+            <path
+              d="M 340 148 C 380 130, 420 118, 460 112
+                 M 460 112 C 500 106, 545 104, 590 102
+                 M 590 102 C 630 100, 680 102, 740 106"
+              stroke="currentColor"
+              strokeWidth="5"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+
+            {/* ── Upper twigs from right bough ── */}
+            <path
+              d="M 420 118 C 415 98, 410 78, 400 55 M 400 55 C 392 38, 388 22, 380 5
+                 M 400 55 C 410 40, 418 28, 425 15"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+            <path
+              d="M 540 104 C 538 82, 535 60, 528 38 M 528 38 C 522 20, 518 10, 510 -2
+                 M 528 38 C 538 22, 545 12, 552 0"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+            <path
+              d="M 660 102 C 658 80, 655 60, 645 40 M 645 40 C 638 22, 632 12, 622 0
+                 M 645 40 C 655 25, 662 14, 670 4"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+
+            {/* ── Dropping lower twig ── */}
+            <path
+              d="M 460 112 C 468 130, 472 150, 480 168 M 480 168 C 486 182, 492 195, 498 210"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="text-neutral-400 dark:text-neutral-600"
+            />
+          </svg>
+
+          {/* Birds & mosquito resting on branch (visible only when resting) */}
+          {bugStage === "resting" && sectionWidth > 0 && (
+            <RestingFlock sectionWidth={sectionWidth} />
+          )}
+
+          {/* Flock takeoff animation (visible only when flying) */}
+          {bugStage === "flying" && sectionWidth > 0 && (
+            <FlockOfBirds sectionWidth={sectionWidth} />
+          )}
+        </div>
 
         <BugHunt buttonRef={bugBountyRef} containerRef={containerRef} nameRef={nameRef} setBugStage={setBugStage} />
 
@@ -322,43 +479,8 @@ function Index() {
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Available for engagements
             </div>
           </Reveal>
-          <Reveal delay={0.05} className="relative">
-            {/* Background Watermark & Branch Container (z-0) */}
-            <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-25 dark:opacity-15 select-none overflow-visible">
-              <div className="relative w-full max-w-[600px] h-[200px] overflow-visible">
-                {/* Cyber-forensics blueprint elements combined with bare tree branch */}
-                <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full h-full text-muted-foreground/60 dark:text-muted-foreground/40 overflow-visible">
-                  {/* Concentric Circles & Crosshairs (Cyber Forensics Element) */}
-                  <circle cx="300" cy="100" r="150" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 6" opacity="0.4" />
-                  <circle cx="300" cy="100" r="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 4" opacity="0.5" />
-                  <circle cx="300" cy="100" r="50" stroke="currentColor" strokeWidth="1" opacity="0.3" />
-                  <line x1="300" y1="0" x2="300" y2="200" stroke="currentColor" strokeWidth="0.5" strokeDasharray="10 10" opacity="0.3" />
-                  <line x1="100" y1="100" x2="500" y2="100" stroke="currentColor" strokeWidth="0.5" strokeDasharray="10 10" opacity="0.3" />
-                  
-                  {/* Target Crosshairs */}
-                  <path d="M150 100 L140 100 M450 100 L460 100 M300 250 L300 260 M300 -50 L300 -60" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
-                  
-                  {/* The Bare Branch Silhouette */}
-                  <path 
-                    d="M50 120 C 150 110, 220 90, 320 80 C 400 72, 480 85, 550 95 M 280 85 C 310 65, 340 50, 390 40 M 350 78 C 380 95, 420 110, 460 120 M 470 82 C 490 60, 520 50, 540 45" 
-                    stroke="currentColor" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
-                  />
-                  <path 
-                    d="M100 115 C 130 100, 160 95, 190 92 M 420 112 C 435 125, 450 135, 465 140" 
-                    stroke="currentColor" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                  />
-                </svg>
-                
-                {/* Looping Flock of Birds */}
-                {bugStage === "flying" && <FlockOfBirds />}
-              </div>
-            </div>
-            
-            <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block relative z-10">
+          <Reveal delay={0.05} className="relative z-10">
+            <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block">
               Omar Khalid.
             </h1>
           </Reveal>
