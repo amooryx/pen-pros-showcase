@@ -109,6 +109,16 @@ function Index() {
         {/* Continuous ambient flock in the sky */}
         <AmbientFlock />
 
+        {/* Live background loop video */}
+        <video
+          src="/background.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none z-0 opacity-[0.45] dark:opacity-[0.30] mix-blend-multiply dark:mix-blend-screen"
+        />
+
         <div className="container-prose relative z-10 pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 dark:bg-secondary/30 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
