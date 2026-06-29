@@ -1,4 +1,4 @@
-﻿import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, ShieldCheck, Bug, ScanLine, Crosshair } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/reveal";
 import { posts, postsByCategory } from "@/data/posts";
@@ -207,72 +207,6 @@ function BirdOrchestrator({ buttonRef, containerRef, stage, setStage }: Orchestr
       stage={stage}
       onLanded={handleLanded}
     />
-  );
-}
-
-// â”€â”€â”€ Elegant branch silhouette â€” sits right of centre behind name â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function BranchSilhouette() {
-  return (
-    <div
-      className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden"
-      aria-hidden="true"
-    >
-      {/* Soft horizon fade at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background/30 to-transparent" />
-
-      <svg
-        viewBox="0 0 520 320"
-        fill="none"
-        className="absolute right-0 top-0 w-[55%] max-w-[560px] h-auto opacity-[0.22] dark:opacity-[0.14]"
-        preserveAspectRatio="xMaxYMin meet"
-        aria-hidden="true"
-      >
-        {/* Main bough curving right-to-left */}
-        <path
-          d="M 520 280 C 480 240, 430 210, 370 190 C 310 170, 240 160, 160 155"
-          stroke="currentColor" strokeWidth="6" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-        {/* Fork rising upper-right */}
-        <path
-          d="M 370 190 C 390 165, 415 135, 448 108 C 462 93, 476 80, 494 62"
-          stroke="currentColor" strokeWidth="4" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-        {/* Upper right twigs */}
-        <path
-          d="M 448 108 C 432 90, 420 73, 408 52 M 408 52 C 398 35, 392 20, 384 4
-             M 408 52 C 418 37, 425 25, 430 12"
-          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-        {/* Mid ascending fork */}
-        <path
-          d="M 298 168 C 283 144, 268 116, 252 90 C 242 70, 234 50, 224 26"
-          stroke="currentColor" strokeWidth="3" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-        {/* Mid twigs */}
-        <path
-          d="M 252 90 C 237 73, 225 60, 210 44 M 252 90 C 265 73, 273 56, 278 38
-             M 224 26 C 214 12, 206 2, 196 -10"
-          stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-        {/* Long extension sweeping left */}
-        <path
-          d="M 160 155 C 118 150, 78 148, 28 146"
-          stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-        {/* Small left twigs */}
-        <path
-          d="M 95 149 C 91 132, 87 114, 80 93 M 80 93 C 75 76, 70 63, 62 46"
-          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
-          className="text-neutral-700 dark:text-neutral-400"
-        />
-      </svg>
-    </div>
   );
 }
 
