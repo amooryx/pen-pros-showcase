@@ -9,9 +9,9 @@ import { motion, AnimatePresence } from "motion/react";
 export const Route = createFileRoute("/")(({
   head: () => ({
     meta: [
-      { title: "Omar Khalid â€” Offensive Security Engineer (VAPT)" },
-      { name: "description", content: "Portfolio of Omar Khalid â€” OSCP+, OSCP, CRTP, eWPTX, eCPPT, eCIR, eCDFP, eJPT, Security+. Full writeups, certifications, CTFs and research, all in one place." },
-      { property: "og:title", content: "Omar Khalid â€” Offensive Security Engineer (VAPT)" },
+      { title: "Omar Khalid — Offensive Security Engineer (VAPT)" },
+      { name: "description", content: "Portfolio of Omar Khalid — OSCP+, OSCP, CRTP, eWPTX, eCPPT, eCIR, eCDFP, eJPT, Security+. Full writeups, certifications, CTFs and research, all in one place." },
+      { property: "og:title", content: "Omar Khalid — Offensive Security Engineer (VAPT)" },
       { property: "og:description", content: "Portfolio: certifications, labs, CTFs, CVEs and writeups across web, mobile, AD, malware and DFIR." },
     ],
   }),
@@ -228,28 +228,28 @@ function Index() {
             {[
               {
                 title: "Google Developer Student Clubs (GDSC)",
-                category: "Community â€¢ 2024",
+                category: "Community • 2024",
                 image: "/images/events/gdsc.jpeg",
                 desc: "Led workshops, guided student developers, and grew our local Google developer community.",
                 position: "object-cover object-[center_18%] scale-[1.1]"
               },
               {
-                title: "1st Place â€” AJA CTF Competition",
-                category: "Championship â€¢ 2025",
+                title: "1st Place — AJA CTF Competition",
+                category: "Championship • 2025",
                 image: "/images/events/aja-ctf.jpeg",
                 desc: "Led our core team to achieve the absolute 1st place in the AJA Capture The Flag competition.",
                 position: "object-cover object-[center_60%]"
               },
               {
                 title: "Blackhat CTF Finalist",
-                category: "Tournament â€¢ 2024 - 2025",
+                category: "Tournament • 2024 - 2025",
                 image: "/images/events/blackhat-2025.jpeg",
                 desc: "Qualified for the final round at Blackhat CTF, competing with an elite team.",
                 position: "object-cover object-[center_25%]"
               },
               {
                 title: "LEAP 2025 Showcase",
-                category: "Summit â€¢ March 2025",
+                category: "Summit • March 2025",
                 image: "/images/events/leap-2025-2.jpeg",
                 desc: "Participated in the massive LEAP 2025 tech summit in Riyadh with teammates.",
                 position: "object-cover object-[center_35%]"
