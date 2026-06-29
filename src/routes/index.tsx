@@ -23,20 +23,24 @@ const LAB_CATS = ["Mobile", "Reverse Engineering", "Malware", "DFIR", "Memory"];
 interface BugHuntProps {
   buttonRef: React.RefObject<HTMLAnchorElement | null>;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  nameRef: React.RefObject<HTMLHeadingElement | null>;
   setBugStage: (stage: "flying" | "landed" | "targeted" | "shot" | "dead") => void;
 }
 
-function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
-  const [coords, setCoords] = useState<{ x: number; y: number } | null>(null);
+function BugHunt({ buttonRef, containerRef, nameRef, setBugStage }: BugHuntProps) {
+  const [coords, setCoords] = useState<{ x: number; y: number; spawnX: number; spawnY: number } | null>(null);
   const [stage, setStage] = useState<"flying" | "landed" | "targeted" | "shot" | "dead">("flying");
 
   const measureCoords = () => {
-    if (buttonRef.current && containerRef.current) {
+    if (buttonRef.current && containerRef.current && nameRef.current) {
       const btnRect = buttonRef.current.getBoundingClientRect();
+      const nameRect = nameRef.current.getBoundingClientRect();
       const containerRect = containerRef.current.getBoundingClientRect();
       setCoords({
         x: btnRect.left - containerRect.left + btnRect.width / 2,
         y: btnRect.top - containerRect.top + btnRect.height / 2,
+        spawnX: nameRect.right - containerRect.left,
+        spawnY: nameRect.top - containerRect.top,
       });
     }
   };
@@ -66,25 +70,25 @@ function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
           <motion.div
             className="absolute"
             style={{ x: 0, y: 0, originX: 0.5, originY: 0.5 }}
-            initial={{ x: coords.x + 150, y: -200, opacity: 0, rotate: 180 }}
+            initial={{ x: coords.spawnX, y: coords.spawnY, opacity: 0, rotate: 45 }}
             animate={
               stage === "flying"
                 ? {
                     x: [
-                      coords.x + 150, 
-                      coords.x - 200, 
-                      coords.x + 100, 
-                      coords.x - 80, 
+                      coords.spawnX, 
+                      coords.spawnX + 150, 
+                      coords.spawnX - 100, 
+                      coords.x - 120, 
                       coords.x
                     ],
                     y: [
-                      -200, 
-                      coords.y - 120, 
-                      coords.y - 80, 
-                      coords.y + 40, 
+                      coords.spawnY, 
+                      coords.spawnY - 50, 
+                      coords.spawnY + 80, 
+                      coords.y - 60, 
                       coords.y
                     ],
-                    rotate: [180, 220, 140, 260, 0],
+                    rotate: [45, 90, -45, 120, 0],
                     opacity: [0, 1, 1, 1, 1],
                   }
                 : stage === "landed" || stage === "targeted"
@@ -121,7 +125,6 @@ function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
                 setTimeout(() => setStage("targeted"), 1000);
               } else if (stage === "shot") {
                 setStage("dead");
-                // Wait 4 seconds (clean patched state), then restart the loop!
                 setTimeout(() => {
                   setStage("flying");
                 }, 4000);
@@ -132,7 +135,7 @@ function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
               <motion.div
                 animate={
                   stage === "flying"
-                    ? { rotate: [-15, 15, -15], scale: [1, 1.15, 1] }
+                    ? { rotate: [-10, 10, -10], scale: [1, 1.1, 1] }
                     : stage === "landed"
                     ? { y: [0, -1.5, 0] }
                     : { scale: 0.95 }
@@ -142,13 +145,44 @@ function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
                   duration: stage === "flying" ? 0.08 : 0.4,
                   ease: "easeInOut",
                 }}
-                className={`flex items-center justify-center p-1.5 rounded-full border transition-colors duration-300 ${
-                  stage === "shot"
-                    ? "bg-red-500/20 border-red-500/40 text-red-600 dark:text-red-400"
-                    : "bg-primary/10 border-primary/20 text-primary shadow-sm shadow-primary/10"
-                }`}
+                className={`flex items-center justify-center p-1.5 transition-colors duration-300`}
               >
-                <Bug className="h-5 w-5" />
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className={
+                  stage === "shot"
+                    ? "text-red-500"
+                    : "text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
+                }>
+                  <line x1="16" y1="8" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" />
+                  
+                  <path d="M12 14 C10 16, 9 20, 11 22" stroke="currentColor" strokeWidth="1" />
+                  <path d="M20 14 C22 16, 23 20, 21 22" stroke="currentColor" strokeWidth="1" />
+                  <path d="M11 16 C9 18, 9 22, 10 24" stroke="currentColor" strokeWidth="0.8" />
+                  <path d="M21 16 C23 18, 23 22, 22 24" stroke="currentColor" strokeWidth="0.8" />
+                  
+                  <ellipse cx="16" cy="13" rx="2" ry="4" fill="currentColor" />
+                  <path d="M16 17 L16 26" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  
+                  <motion.path
+                    d="M15 12 C10 8, 4 9, 6 15 C8 19, 12 16, 15 13"
+                    fill="currentColor"
+                    fillOpacity="0.4"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    style={{ transformOrigin: "15px 12px" }}
+                    animate={stage === "flying" ? { rotateZ: [0, -45, 0], scaleY: [1, 0.6, 1] } : {}}
+                    transition={{ repeat: Infinity, duration: 0.1, ease: "easeInOut" }}
+                  />
+                  <motion.path
+                    d="M17 12 C22 8, 28 9, 26 15 C24 19, 20 16, 17 13"
+                    fill="currentColor"
+                    fillOpacity="0.4"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    style={{ transformOrigin: "17px 12px" }}
+                    animate={stage === "flying" ? { rotateZ: [0, 45, 0], scaleY: [1, 0.6, 1] } : {}}
+                    transition={{ repeat: Infinity, duration: 0.1, ease: "easeInOut" }}
+                  />
+                </svg>
               </motion.div>
 
               {(stage === "targeted" || stage === "shot") && (
@@ -193,6 +227,7 @@ function Index() {
   const [bugStage, setBugStage] = useState<"flying" | "landed" | "targeted" | "shot" | "dead">("flying");
   const containerRef = useRef<HTMLDivElement>(null);
   const bugBountyRef = useRef<HTMLAnchorElement>(null);
+  const nameRef = useRef<HTMLHeadingElement>(null);
 
   return (
     <div>
@@ -204,7 +239,7 @@ function Index() {
         <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-[5%] right-[5%] w-[400px] h-[400px] rounded-full bg-primary/3 dark:bg-primary/5 blur-3xl pointer-events-none" />
 
-        <BugHunt buttonRef={bugBountyRef} containerRef={containerRef} setBugStage={setBugStage} />
+        <BugHunt buttonRef={bugBountyRef} containerRef={containerRef} nameRef={nameRef} setBugStage={setBugStage} />
 
         <div className="container-prose relative pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
@@ -212,8 +247,28 @@ function Index() {
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Available for engagements
             </div>
           </Reveal>
-          <Reveal delay={0.05}>
-            <h1 className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent">
+          <Reveal delay={0.05} className="relative">
+            {/* Tech Blueprint Draw Background */}
+            <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none opacity-30 dark:opacity-20 select-none">
+              <svg width="600" height="200" viewBox="0 0 600 200" fill="none" className="w-full max-w-[600px] h-auto overflow-visible">
+                <circle cx="300" cy="100" r="140" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" strokeDasharray="4 4" />
+                <circle cx="300" cy="100" r="105" stroke="currentColor" className="text-muted-foreground/15 dark:text-muted-foreground/10" strokeWidth="1" />
+                <circle cx="300" cy="100" r="70" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" />
+                
+                <line x1="300" y1="-20" x2="300" y2="220" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="100" y1="100" x2="500" y2="100" stroke="currentColor" className="text-muted-foreground/10 dark:text-muted-foreground/5" strokeWidth="1" strokeDasharray="3 3" />
+                
+                <path d="M 405 100 A 105 105 0 0 0 374.2 25.8" stroke="currentColor" className="text-muted-foreground/20 dark:text-muted-foreground/15" strokeWidth="1.5" />
+                <text x="390" y="55" className="text-[10px] font-mono fill-muted-foreground/30 font-semibold uppercase tracking-widest">45.00°</text>
+                
+                <path d="M 120 40 L 100 40 L 100 60" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
+                <path d="M 480 40 L 500 40 L 500 60" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
+                <path d="M 120 160 L 100 160 L 100 140" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
+                <path d="M 480 160 L 500 160 L 500 140" stroke="currentColor" className="text-muted-foreground/25 dark:text-muted-foreground/20" strokeWidth="1.5" />
+              </svg>
+            </div>
+            
+            <h1 ref={nameRef} className="mt-8 text-6xl md:text-8xl font-semibold tracking-tight leading-[1.02] bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent inline-block">
               Omar Khalid.
             </h1>
           </Reveal>
