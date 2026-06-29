@@ -3,6 +3,8 @@ import { ArrowRight, ArrowUpRight, ShieldCheck, Bug, ScanLine, Crosshair } from 
 import { Reveal, Stagger, StaggerItem } from "@/components/reveal";
 import { posts, postsByCategory } from "@/data/posts";
 import { stats, skills } from "@/data/site";
+import { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,19 +20,187 @@ export const Route = createFileRoute("/")({
 
 const LAB_CATS = ["Mobile", "Reverse Engineering", "Malware", "DFIR", "Memory"];
 
+interface BugHuntProps {
+  buttonRef: React.RefObject<HTMLAnchorElement | null>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  setBugStage: (stage: "flying" | "landed" | "targeted" | "shot" | "dead") => void;
+}
+
+function BugHunt({ buttonRef, containerRef, setBugStage }: BugHuntProps) {
+  const [coords, setCoords] = useState<{ x: number; y: number } | null>(null);
+  const [stage, setStage] = useState<"flying" | "landed" | "targeted" | "shot" | "dead">("flying");
+
+  const measureCoords = () => {
+    if (buttonRef.current && containerRef.current) {
+      const btnRect = buttonRef.current.getBoundingClientRect();
+      const containerRect = containerRef.current.getBoundingClientRect();
+      setCoords({
+        x: btnRect.left - containerRect.left + btnRect.width / 2,
+        y: btnRect.top - containerRect.top + btnRect.height / 2,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      measureCoords();
+    }, 1000);
+
+    window.addEventListener("resize", measureCoords);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", measureCoords);
+    };
+  }, []);
+
+  useEffect(() => {
+    setBugStage(stage);
+  }, [stage, setBugStage]);
+
+  if (!coords) return null;
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+      <AnimatePresence>
+        {stage !== "dead" && (
+          <motion.div
+            className="absolute"
+            style={{ x: 0, y: 0, originX: 0.5, originY: 0.5 }}
+            initial={{ x: -100, y: 150, opacity: 0, rotate: 45 }}
+            animate={
+              stage === "flying"
+                ? {
+                    x: [
+                      -50, 
+                      coords.x - 250, 
+                      coords.x + 200, 
+                      coords.x - 120, 
+                      coords.x
+                    ],
+                    y: [
+                      100, 
+                      coords.y - 150, 
+                      coords.y - 60, 
+                      coords.y + 120, 
+                      coords.y
+                    ],
+                    rotate: [45, 90, -45, 120, 0],
+                    opacity: 1,
+                  }
+                : stage === "landed" || stage === "targeted"
+                ? {
+                    x: coords.x,
+                    y: coords.y,
+                    rotate: 0,
+                    opacity: 1,
+                  }
+                : {
+                    x: coords.x,
+                    y: coords.y + 400,
+                    rotate: 180,
+                    opacity: 0,
+                  }
+            }
+            transition={
+              stage === "flying"
+                ? {
+                    duration: 5.5,
+                    ease: "easeInOut",
+                    times: [0, 0.25, 0.5, 0.75, 1],
+                  }
+                : stage === "shot"
+                ? {
+                    duration: 1.0,
+                    ease: "easeIn",
+                  }
+                : {}
+            }
+            onAnimationComplete={() => {
+              if (stage === "flying") {
+                setStage("landed");
+                setTimeout(() => setStage("targeted"), 1000);
+              } else if (stage === "shot") {
+                setStage("dead");
+              }
+            }}
+          >
+            <div className="relative -left-4 -top-4">
+              <motion.div
+                animate={
+                  stage === "flying"
+                    ? { rotate: [-15, 15, -15], scale: [1, 1.15, 1] }
+                    : stage === "landed"
+                    ? { y: [0, -1.5, 0] }
+                    : { scale: 0.95 }
+                }
+                transition={{
+                  repeat: Infinity,
+                  duration: stage === "flying" ? 0.08 : 0.4,
+                  ease: "easeInOut",
+                }}
+                className={`flex items-center justify-center p-1.5 rounded-full border transition-colors duration-300 ${
+                  stage === "shot"
+                    ? "bg-red-500/20 border-red-500/40 text-red-600 dark:text-red-400"
+                    : "bg-primary/10 border-primary/20 text-primary shadow-sm shadow-primary/10"
+                }`}
+              >
+                <Bug className="h-5 w-5" />
+              </motion.div>
+
+              {(stage === "targeted" || stage === "shot") && (
+                <motion.div
+                  initial={{ scale: 3, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  onAnimationComplete={() => {
+                    if (stage === "targeted") {
+                      setTimeout(() => setStage("shot"), 800);
+                    }
+                  }}
+                  className="absolute -inset-3 flex items-center justify-center"
+                >
+                  <div className="absolute inset-0 rounded-full border border-red-500/30 animate-ping duration-1000" />
+                  <Crosshair className="h-10 w-10 text-red-500 animate-spin" style={{ animationDuration: "10s" }} />
+                  <div className="absolute h-1.5 w-1.5 rounded-full bg-red-600 shadow-md shadow-red-500" />
+                </motion.div>
+              )}
+
+              {stage === "shot" && (
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [1, 3, 0], opacity: [0.9, 1, 0] }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute -inset-10 bg-gradient-radial from-red-500/30 to-transparent rounded-full flex items-center justify-center pointer-events-none"
+                >
+                  <div className="absolute w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function Index() {
   const featuredCerts = postsByCategory("Certification").slice(0, 6);
   const featuredLabs = posts.filter((p) => LAB_CATS.includes(p.category)).slice(0, 6);
+  const [bugStage, setBugStage] = useState<"flying" | "landed" | "targeted" | "shot" | "dead">("flying");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const bugBountyRef = useRef<HTMLAnchorElement>(null);
 
   return (
     <div>
-      <section className="relative overflow-hidden">
+      <section ref={containerRef} className="relative overflow-hidden">
         {/* Apple-style subtle grid background */}
         <div className="absolute inset-0 bg-grid opacity-[0.12] dark:opacity-[0.22] pointer-events-none" />
         
         {/* Glowing backdrop blur circles for premium tech aesthetic */}
         <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-[5%] right-[5%] w-[400px] h-[400px] rounded-full bg-primary/3 dark:bg-primary/5 blur-3xl pointer-events-none" />
+
+        <BugHunt buttonRef={bugBountyRef} containerRef={containerRef} setBugStage={setBugStage} />
 
         <div className="container-prose relative pt-28 pb-24 md:pt-40 md:pb-32 text-center">
           <Reveal>
@@ -63,9 +233,16 @@ function Index() {
                 Read writeups <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
               </Link>
               <Link
+                ref={bugBountyRef}
                 to="/writeups"
                 search={{ category: "Bug Bounty" } as any}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/50 dark:bg-background/20 backdrop-blur-md px-6 py-3 text-sm font-medium text-foreground hover:bg-secondary transition shadow-sm"
+                className={`inline-flex items-center gap-1.5 rounded-full border px-6 py-3 text-sm font-medium transition-all shadow-sm duration-300 ${
+                  bugStage === "shot"
+                    ? "border-red-500 bg-red-500/10 text-red-500 scale-95 shadow-red-500/20"
+                    : bugStage === "dead"
+                    ? "border-green-500/40 bg-green-500/10 text-green-600 dark:text-green-400 shadow-md shadow-green-500/10 scale-100"
+                    : "border-border bg-background/50 dark:bg-background/20 backdrop-blur-md text-foreground hover:bg-secondary"
+                }`}
               >
                 Bug bounty reports
               </Link>
